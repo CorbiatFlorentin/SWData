@@ -1,0 +1,7 @@
+{
+    "db_host": "localhost",
+    "db_port": 5432,
+    "db_name": "SWDatabase",
+    "db_user": "florentin",
+    "db_password": "B2afdf25!!!!"
+  }

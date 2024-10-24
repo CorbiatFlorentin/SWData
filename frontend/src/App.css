@@ -5,7 +5,7 @@
 }
 
 body {
-  background: #eaeaea;
+  background: #ea9a31;
   overflow: hidden;
 }
 
@@ -16,8 +16,8 @@ body {
   transform: translate(-50%, -50%);
   width: 1000px;
   height: 600px;
-  background: #f5f5f5;
-  box-shadow: 0 30px 50px #dbdbdb;
+  background: #ea9a31;
+  border: #000;
 }
 
 .slide {
@@ -34,7 +34,6 @@ body {
   border-radius: 20px;
   background-size: cover;
   background-position: 50% 50%;
-  box-shadow: 0 30px 50px #505050;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -90,6 +89,7 @@ button {
   cursor: pointer;
   opacity: 0;
   animation: animate 1s ease-in-out 0.6s 1 forwards;
+  border-radius: 10%;
 }
 
 @keyframes animate {
@@ -115,6 +115,7 @@ button {
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
+  border-radius: 10%;
 }
 
 .button-container button {
@@ -147,13 +148,88 @@ button {
   border: 0;
 }
 
-.navbar{
+/* Navbar */
+.navbar {
   width: 100%;
   background-color: #2980b9;
   display: flex;
   align-items: center;
   justify-content: space-between;
-padding: 10px 20px;
+  padding: 10px 20px;
 }
+
+/* RESPONSIVE DESIGN */
+
+/* Petits écrans : Tablettes */
+@media (max-width: 768px) {
+  .container {
+    width: 90%; /* Réduction de la taille de la container */
+    height: auto; /* Hauteur dynamique */
+  }
+
+  .item {
+    width: 150px;
+    height: 250px;
+  }
+
+  .item.active {
+    width: 100%;
+    height: 100%;
+  }
+
+  .name {
+    font-size: 30px;
+  }
+
+  .des {
+    font-size: 14px;
+  }
+
+  .button-container button {
+    width: 35px;
+    height: 30px;
+  }
+}
+
+/* Très petits écrans : Smartphones */
+@media (max-width: 480px) {
+  .container {
+    width: 95%; /* Plus petite largeur pour mobile */
+    height: auto;
+  }
+
+  .item {
+    width: 120px;
+    height: 180px;
+  }
+
+  .item.active {
+    width: 100%;
+    height: 100%;
+  }
+
+  .content {
+    left: 20px; /* Réduire le décalage gauche */
+    width: 250px; /* Réduire la taille du contenu */
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .des {
+    font-size: 12px;
+  }
+
+  button {
+    padding: 8px 16px;
+  }
+
+  .button-container button {
+    width: 30px;
+    height: 25px;
+  }
+}
+
 
 

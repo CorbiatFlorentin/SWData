@@ -1,18 +1,19 @@
 import React from 'react';
 import { FaUser } from 'react-icons/fa'; // Pour l'icône de l'utilisateur
+import { useNavigate } from 'react-router-dom'; // Importer useNavigate pour la redirection
 import './App.css'; // Assurez-vous que le fichier CSS est importé
 
 const Navbar = () => {
+  const navigate = useNavigate(); 
   
-  // Fonction pour rafraîchir la page lorsque le bouton titre est cliqué
-  const refreshPage = () => {
-    window.location.reload();
+  const redirectToHome = () => {
+    navigate('/');  // Rediriger vers la page d'accueil
   };
 
   return (
     <nav className="navbar">
-      <button className="navbar-brand" onClick={refreshPage}>
-        <strong>My Website</strong>
+      <button className="navbar-brand" onClick={redirectToHome}>
+        <strong>Sw Data</strong>
       </button>
 
       {/* Barre de recherche */}
@@ -30,4 +31,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 

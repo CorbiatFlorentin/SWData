@@ -1,11 +1,9 @@
 // src/CodexPage.js
 import React from 'react';
-import Navbar from './Navbar'; // Importe le composant Navbar si nécessaire
 
 const CodexPage = () => {
   return (
     <div>
-      <Navbar />  {/* Si tu veux garder le même Navbar sur toutes les pages */}
       <div className="page-container">
         <h1>Codex</h1>
         <p>

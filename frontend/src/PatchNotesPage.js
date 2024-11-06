@@ -1,11 +1,9 @@
 // src/PatchNotesPage.js
 import React from 'react';
-import Navbar from './Navbar'; // Importe le composant Navbar si nécessaire
 
 const PatchNotesPage = () => {
   return (
     <div>
-      <Navbar />  {/* Si tu veux garder le même Navbar sur toutes les pages */}
       <div className="page-container">
         <h1>PatchNotes</h1>
         <p>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Pas besoin de Router ici, juste useNavigate
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 import Button from './Button';
 import arenaImage from './Img/Arena.jpeg';
@@ -8,7 +8,6 @@ import donjonsImage from './Img/Donjons.jpeg';
 import toaImage from './Img/Toa.jpeg';
 import codexImage from './Img/Codex.jpeg';
 import patchNotesImage from './Img/PatchNotes.jpeg';
-
 
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -51,7 +50,7 @@ function App() {
                 <div className="des">{item.description}</div>
                 <button
                   className="see-more"
-                  onClick={() => navigate(item.page)}  // Naviguez vers la page spécifique
+                  onClick={() => navigate(item.page)}  // Naviguer vers la page spécifique
                 >
                   See More
                 </button>
@@ -69,8 +68,4 @@ function App() {
 }
 
 export default App;
-
-
-
-
 

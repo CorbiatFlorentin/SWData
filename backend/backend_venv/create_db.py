@@ -11,7 +11,7 @@ try:
     # Créer un curseur pour exécuter des requêtes SQL
     cursor = conn.cursor()
 
-    # Création de la table monster_type
+    # Création des tables de base (type, élément, statut, statistiques, compétence, utilisateur)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS monster_type (
         id INTEGER PRIMARY KEY,
@@ -19,12 +19,10 @@ try:
     )
     ''')
 
-    # Insertion des valeurs pour monster_type
     cursor.executemany('''
     INSERT OR IGNORE INTO monster_type (id, type_name) VALUES (?, ?)
     ''', [(1, 'Attaque'), (2, 'Support'), (3, 'Défense'), (4, 'Pv')])
 
-    # Création de la table monster_elements
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS monster_elements (
         id INTEGER PRIMARY KEY,
@@ -32,12 +30,10 @@ try:
     )
     ''')
 
-    # Insertion des valeurs pour monster_elements
     cursor.executemany('''
     INSERT OR IGNORE INTO monster_elements (id, element_name) VALUES (?, ?)
     ''', [(1, 'Vent'), (2, 'Feu'), (3, 'Eau'), (4, 'Lumière'), (5, 'Ténèbres')])
 
-    # Création de la table monster_status
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS monster_status (
         monster_id NVARCHAR(255) PRIMARY KEY,
@@ -50,7 +46,6 @@ try:
     )
     ''')
 
-    # Création de la table Stats
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS stats (
         monster_id NVARCHAR(255) PRIMARY KEY,
@@ -66,7 +61,6 @@ try:
     )
     ''')
 
-    # Création de la table Compétence avec colonnes d'image associées
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS competence (
         monster_id NVARCHAR(255) PRIMARY KEY,
@@ -84,9 +78,37 @@ try:
     )
     ''')
 
-    # Valider les changements
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom NVARCHAR(255) NOT NULL,
+        prenom NVARCHAR(255) NOT NULL,
+        pseudo NVARCHAR(255) UNIQUE NOT NULL,
+        email NVARCHAR(255) UNIQUE NOT NULL,
+        date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+        mot_de_passe TEXT NOT NULL
+    )
+    ''')
+
+    # Création de la table de jointure pour visualiser toutes les informations du monstre
+    cursor.execute('''
+    CREATE VIEW IF NOT EXISTS monster_full_view AS
+    SELECT ms.monster_id, ms.eveil, ms.famille, 
+           mt.type_name AS type, me.element_name AS element,
+           st.hp, st.attaque, st.defense, st.vitesse, st.taux_crit, 
+           st.dommages_crit, st.resistance, st.precision,
+           comp.sort1, comp.sort1_img, comp.sort2, comp.sort2_img, 
+           comp.sort3, comp.sort3_img, comp.sort4, comp.sort4_img, 
+           comp.passif, comp.passif_img
+    FROM monster_status AS ms
+    LEFT JOIN monster_type AS mt ON ms.type_id = mt.id
+    LEFT JOIN monster_elements AS me ON ms.element_id = me.id
+    LEFT JOIN stats AS st ON ms.monster_id = st.monster_id
+    LEFT JOIN competence AS comp ON ms.monster_id = comp.monster_id
+    ''')
+
     conn.commit()
-    print("Tables créées avec succès.")
+    print("Tables et vue de jointure créées avec succès.")
 
 except sqlite3.Error as e:
     print(f"Erreur lors de la connexion à la base de données : {e}")
@@ -96,5 +118,6 @@ finally:
     if conn:
         conn.close()
         print("Connexion fermée.")
+
 
 

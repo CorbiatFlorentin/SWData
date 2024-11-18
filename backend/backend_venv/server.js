@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors'); // Pour gérer les requêtes cross-origin
 
 const app = express();
-const db = new sqlite3.Database('./database.sqlite'); // Chemin vers la base de données SQLite
+const db = new sqlite3.Database('./mydatabase.db'); // Chemin vers la base de données SQLite
 
 // Middleware
 app.use(cors()); // Autorise les requêtes depuis d'autres origines (nécessaire pour le front-end)

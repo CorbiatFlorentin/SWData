@@ -1,17 +1,17 @@
 import React from 'react';
-import { FaUser } from 'react-icons/fa'; // Pour l'icône de l'utilisateur
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate pour la redirection
-import './App.css'; // Assurez-vous que le fichier CSS est importé
+import { FaUser } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import { useUser } from './UserContext'; 
+import './App.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { user } = useUser(); // Récupérer l'utilisateur connecté
 
   const redirectToHome = () => {
-    navigate('/'); // Rediriger vers la page d'accueil
+    navigate('/');
   };
-
 
   return (
     <nav className="navbar">
@@ -32,15 +32,17 @@ const Navbar = () => {
         </button>
       </form>
 
-      {/* Symbole de connexion pour la redirection vers la page d'inscription */}
+      {/* Icône de connexion */}
       <Link to="./Register" className="btn btn-link">
         <FaUser size={24} />
+        {user && <span className="navbar-user">{user.pseudo}</span>} {/* Afficher le pseudo */}
       </Link>
     </nav>
   );
 };
 
 export default Navbar;
+
 
 
 

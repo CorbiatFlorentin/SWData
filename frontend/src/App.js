@@ -9,6 +9,7 @@ import toaImage from './Img/Toa.jpeg';
 import codexImage from './Img/Codex.jpeg';
 import patchNotesImage from './Img/PatchNotes.jpeg';
 
+
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
 

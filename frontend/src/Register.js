@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-
-
+import { useUser } from './UserContext'; // Utiliser le contexte utilisateur
 
 const Register = () => {
-  const [formData, setFormData] = useState({
+  const { setUser } = useUser(); // Mettre à jour le contexte utilisateur
+  const [registerData, setRegisterData] = useState({
     nom: '',
     prenom: '',
     pseudo: '',
@@ -11,44 +11,113 @@ const Register = () => {
     mot_de_passe: ''
   });
 
-  const handleChange = (e) => {
+  const [loginData, setLoginData] = useState({
+    email: '',
+    mot_de_passe: ''
+  });
+
+  // Gestion des champs pour le formulaire d'inscription
+  const handleRegisterChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setRegisterData({ ...registerData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  // Gestion des champs pour le formulaire de connexion
+  const handleLoginChange = (e) => {
+    const { name, value } = e.target;
+    setLoginData({ ...loginData, [name]: value });
+  };
+
+  // Soumission du formulaire d'inscription
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch('http://localhost:5000/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(registerData)
       });
-      const data = await response.json();
+
+      console.log('Reponse Object', response);
+
+      let data;
+      try {
+        data = await response.json();
+        console.log('Response JSON Parsed:', data);
+      } catch (err) {
+        console.error('Erreur lors de la conversion JSON:', err);
+        console.log('Response Text:', await response.text()); // Log le texte brut si ce n'est pas un JSON
+        return;
+      }
+      
       if (response.ok) {
-        alert(data.message);
+        alert('Inscription réussie');
+        setUser({ pseudo: registerData.pseudo }); // Mettre à jour le contexte avec le pseudo
       } else {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('Erreur lors de l\'inscription:', error);
+    }
+  };
+
+  // Soumission du formulaire de connexion
+  const handleLoginSubmit = async (e) => {
+    console.log('Données envoyées pour /login:', loginData);
+
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData)
+      });
+
+      console.log('Response Status:', response.status); // Ajoutez ceci
+      console.log('Response Headers:', response.headers); // Ajoutez ceci
+
+      const data = await response.json();
+      console.log('Response Data:', data);
+
+      if (response.ok) {
+        alert('Connexion réussie');
+        setUser({ pseudo: data.pseudo }); // Mettre à jour le contexte avec le pseudo retourné par le serveur
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la connexion:', error);
     }
   };
 
   return (
-    <div className="register-form">
-      <h2>Créer un compte</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="nom" placeholder="Nom" onChange={handleChange} required />
-        <input type="text" name="prenom" placeholder="Prénom" onChange={handleChange} required />
-        <input type="text" name="pseudo" placeholder="Pseudo" onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-        <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleChange} required />
-        <button type="submit">S'inscrire</button>
-      </form>
+    <div className="auth-page">
+      <div className="register-section">
+        <h2>Créer un compte</h2>
+        <form onSubmit={handleRegisterSubmit}>
+         <input type="text" name="nom" placeholder="Nom" onChange={handleRegisterChange} required />
+         <input type="text" name="prenom" placeholder="Prénom" onChange={handleRegisterChange} required />
+         <input type="text" name="pseudo" placeholder="Pseudo" onChange={handleRegisterChange} required />
+         <input type="email" name="email" placeholder="Email" onChange={handleRegisterChange} required />
+         <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleRegisterChange} required />
+         <button type="submit">S'inscrire</button>
+         </form>
+
+      </div>
+
+      <div className="login-section">
+        <h2>Se connecter</h2>
+        <form onSubmit={handleLoginSubmit}>
+          <input type="email" name="email" placeholder="Email" onChange={handleLoginChange} required />
+          <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleLoginChange} required />
+          <button type="submit">Se connecter</button>
+        </form>
+      </div>
     </div>
   );
 };
 
 export default Register;
+
 

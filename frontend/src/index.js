@@ -16,7 +16,7 @@ root.render(
       <Navbar />
       <AppRoutes /> {/* Utilisez les routes définies */}
     </Router>
-    *</UserProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 

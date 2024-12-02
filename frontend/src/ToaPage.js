@@ -1,11 +1,10 @@
 // src/ToaPage.js
 import React from 'react';
-import Navbar from './Navbar'; // Importe le composant Navbar si nécessaire
+
 
 const ToaPage = () => {
   return (
     <div>
-      <Navbar />  {/* Si tu veux garder le même Navbar sur toutes les pages */}
       <div className="page-container">
         <h1>Toa</h1>
         <p>

@@ -6,6 +6,9 @@ import Arena from './ArenaPage';
 import Donjons from './DonjonsPage';
 import Occupation from './OccupationPage';
 import Codex from './CodexPage';
+import Toa from './ToaPage';
+import PatchNotes from './PatchNotesPage';
+
 
 function AppRoutes() {
   return (
@@ -13,9 +16,11 @@ function AppRoutes() {
       <Route path="/Register" element={<Register />} /> {/* Route pour Register */}
       <Route path="/" element={<App />} /> {/* Route pour la page d'accueil */}
       <Route path='/Arena' element={<Arena />} />
-      <Route path='/Donjon' element={<Donjons/>} />
+      <Route path='/donjons' element={<Donjons/>} />
       <Route path='/Occupation' element={<Occupation/>} />
       <Route path='/Codex' element={<Codex/>} />
+      <Route path='/Toa' element={<Toa/>} />
+      <Route path='/PatchNotes' element={<PatchNotes/>} />
 
     </Routes>
   );

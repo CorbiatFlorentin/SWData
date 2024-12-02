@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useUser } from './UserContext'; // Utiliser le contexte utilisateur
+import { useUser } from './UserContext'; 
 
 const Register = () => {
-  const { setUser } = useUser(); // Mettre à jour le contexte utilisateur
+  const { setUser } = useUser(); 
   const [registerData, setRegisterData] = useState({
     nom: '',
     prenom: '',
@@ -46,13 +46,13 @@ const Register = () => {
         console.log('Response JSON Parsed:', data);
       } catch (err) {
         console.error('Erreur lors de la conversion JSON:', err);
-        console.log('Response Text:', await response.text()); // Log le texte brut si ce n'est pas un JSON
+        console.log('Response Text:', await response.text());
         return;
       }
       
       if (response.ok) {
         alert('Inscription réussie');
-        setUser({ pseudo: registerData.pseudo }); // Mettre à jour le contexte avec le pseudo
+        setUser({ pseudo: registerData.pseudo }); 
       } else {
         alert(data.error);
       }
@@ -74,14 +74,14 @@ const Register = () => {
         body: JSON.stringify(loginData)
       });
 
-      console.log('Response Status:', response.status); // Ajoutez ceci
-      console.log('Response Headers:', response.headers); // Ajoutez ceci
+      console.log('Response Status:', response.status); 
+      console.log('Response Headers:', response.headers); 
 
       const data = await response.json();
       console.log('Response Data:', data);
 
       if (response.ok) {
-        alert('Connexion réussie');
+        //alert('Connexion réussie');
         setUser({ pseudo: data.pseudo }); // Mettre à jour le contexte avec le pseudo retourné par le serveur
       } else {
         alert(data.error);
@@ -92,30 +92,32 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-page">
-      <div className="register-section">
-        <h2>Créer un compte</h2>
-        <form onSubmit={handleRegisterSubmit}>
-         <input type="text" name="nom" placeholder="Nom" onChange={handleRegisterChange} required />
-         <input type="text" name="prenom" placeholder="Prénom" onChange={handleRegisterChange} required />
-         <input type="text" name="pseudo" placeholder="Pseudo" onChange={handleRegisterChange} required />
-         <input type="email" name="email" placeholder="Email" onChange={handleRegisterChange} required />
-         <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleRegisterChange} required />
-         <button type="submit">S'inscrire</button>
-         </form>
-
-      </div>
-
-      <div className="login-section">
-        <h2>Se connecter</h2>
-        <form onSubmit={handleLoginSubmit}>
-          <input type="email" name="email" placeholder="Email" onChange={handleLoginChange} required />
-          <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleLoginChange} required />
-          <button type="submit">Se connecter</button>
-        </form>
+    <div className="auth-wrapper">
+      <div className="auth-container">
+        <div className="auth-section register-section">
+          <h2>Créer un compte</h2>
+          <form onSubmit={handleRegisterSubmit} className="register-form">
+            <input type="text" name="nom" placeholder="Nom" onChange={handleRegisterChange} required />
+            <input type="text" name="prenom" placeholder="Prénom" onChange={handleRegisterChange} required />
+            <input type="text" name="pseudo" placeholder="Pseudo" onChange={handleRegisterChange} required />
+            <input type="email" name="email" placeholder="Email" onChange={handleRegisterChange} required />
+            <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleRegisterChange} required />
+            <button type="submit">S'inscrire</button>
+          </form>
+        </div>
+  
+        <div className="auth-section login-section">
+          <h2>Se connecter</h2>
+          <form onSubmit={handleLoginSubmit} className="register-form">
+            <input type="email" name="email" placeholder="Email" onChange={handleLoginChange} required />
+            <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleLoginChange} required />
+            <button type="submit">Se connecter</button>
+          </form>
+        </div>
       </div>
     </div>
   );
+  
 };
 
 export default Register;

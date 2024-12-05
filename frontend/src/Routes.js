@@ -21,7 +21,7 @@ function AppRoutes() {
       <Route path="/donjons" element={<DonjonsPage />} />
       <Route path="/toa" element={<ToaPage />} />
       <Route path="/codex" element={<CodexPage />} />
-      <Route path="/patch-notes" element={<PatchNotesPage />} />
+      <Route path="/patchnotes" element={<PatchNotesPage />} />
     </Routes>
     </div>
   );

@@ -1,4 +1,4 @@
-// src/PatchNotesPage.js
+
 import React from 'react';
 
 const PatchNotesPage = () => {

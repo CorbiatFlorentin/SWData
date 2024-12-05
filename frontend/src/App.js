@@ -8,6 +8,7 @@ import donjonsImage from './Img/Donjons.jpeg';
 import toaImage from './Img/Toa.jpeg';
 import codexImage from './Img/Codex.jpeg';
 import patchNotesImage from './Img/PatchNotes.jpeg';
+import Sidebar from './Sidebar';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
     { id: 3, name: 'Donjons', description: 'Lorem ipsum dolor...', image: donjonsImage, page: '/donjons' },
     { id: 4, name: 'Toa', description: 'Lorem ipsum dolor...', image: toaImage, page: '/toa' },
     { id: 5, name: 'Codex', description: 'Lorem ipsum dolor...', image: codexImage, page: '/codex' },
-    { id: 6, name: 'PatchNotes', description: 'Lorem ipsum dolor...', image: patchNotesImage, page: '/patch-notes' }
+    { id: 6, name: 'PatchNotes', description: 'Lorem ipsum dolor...', image: patchNotesImage, page: './PatchNotes' }
   ]);
 
   const nextSlide = () => {
@@ -34,6 +35,7 @@ function App() {
 
   return (
     <div>
+      <Sidebar />
       <div className="container">
         <div className="slide">
           {items.map((item, index) => (

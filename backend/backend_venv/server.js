@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); // Pour générer un jeton JWT
 const cors = require('cors');
+const puppeteer = require('puppeteer');
 
 const app = express();
 const db = new sqlite3.Database('./mydatabase.db');
@@ -103,6 +104,44 @@ app.post('/login', (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// Nouvelle route pour récupérer les patchnotes
+app.get('/api/patchnotes', async (req, res) => {
+    try {
+        const url = 'https://sw.com2us.com/fr/skyarena/news/list?category=update';
+
+        // Lance un navigateur headless
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        // Ouvre la page cible
+        await page.goto(url, { waitUntil: 'networkidle2' });
+
+        // Extrait les articles avec 'news_tit'
+        const patchNotes = await page.evaluate(() => {
+            const notes = [];
+            document.querySelectorAll('strong.news_tit').forEach((element) => {
+                const title = element.textContent.trim();
+                const link = element.closest('a')?.href;
+
+                if (title && link) {
+                    notes.push({
+                        title,
+                        link,
+                    });
+                }
+            });
+            return notes;
+        });
+
+        await browser.close();
+
+        res.json(patchNotes); // Retourne les résultats
+    } catch (error) {
+        console.error('Erreur avec Puppeteer :', error.message);
+        res.status(500).json({ error: 'Erreur lors du scraping des patch notes' });
     }
 });
 

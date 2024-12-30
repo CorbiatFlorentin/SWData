@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './style/PatchNotes.css';
 
 const PatchNotesPage = () => {
   const [articles, setArticles] = useState([]); // Stocker les articles récupérés
@@ -35,17 +36,15 @@ const PatchNotesPage = () => {
       {loading && <p>Chargement des articles...</p>}
       {error && <p>{error}</p>}
 
-      <div>
+      <div className="articles-container">
         {articles.length > 0 ? (
-          <ul>
-            {articles.map((article, index) => (
-              <li key={index}>
-                <a href={article.link} target="_blank" rel="noopener noreferrer">
-                  {article.title}
-                </a>
-              </li>
-            ))}
-          </ul>
+          articles.map((article, index) => (
+            <div key={index} className="article-box">
+              <a href={article.link} target="_blank" rel="noopener noreferrer">
+                {article.title}
+              </a>
+            </div>
+          ))
         ) : (
           !loading && <p>Aucun article trouvé.</p>
         )}

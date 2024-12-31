@@ -26,7 +26,6 @@ const PatchNotesPage = () => {
 
   return (
     <div className="page-container">
-      <h1>PatchNotes</h1>
       <p>
         Bienvenue sur la page PatchNotes ! Ici, vous pouvez trouver toutes les informations
         pertinentes concernant les mises à jour du jeu.

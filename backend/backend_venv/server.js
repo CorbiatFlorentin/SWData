@@ -107,6 +107,50 @@ app.post('/login', (req, res) => {
     }
 });
 
+// Route pour réinitialiser le mot de passe
+app.post('/reset-password', (req, res) => {
+    const { email } = req.body;
+
+    db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
+        if (err) return res.status(500).json({ error: 'Erreur serveur' });
+        if (!user) return res.status(404).json({ error: "Utilisateur non trouvé" });
+
+        const tempPassword = Math.random().toString(36).slice(-8);
+        const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+        db.run(`UPDATE users SET mot_de_passe = ? WHERE email = ?`, [hashedPassword, email], (err) => {
+            if (err) return res.status(500).json({ error: 'Erreur serveur' });
+
+            res.json({ message: `Votre nouveau mot de passe temporaire est: ${tempPassword}` });
+        });
+    });
+});
+
+// Middleware pour vérifier le token
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.sendStatus(401); // Non autorisé
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403); // Interdit
+        req.user = user;
+        next();
+    });
+}
+
+// Suppression de compte avec authentification
+app.delete('/delete-account', authenticateToken, (req, res) => {
+    const email = req.user.email; // Email extrait du token JWT
+
+    db.run(`DELETE FROM users WHERE email = ?`, [email], (err) => {
+        if (err) return res.status(500).json({ error: 'Erreur serveur' });
+        res.json({ message: 'Compte supprimé avec succès' });
+        console.log('Compte supprimé:',req.body)
+    });
+});
+
+
 // Nouvelle route pour récupérer les patchnotes
 app.get('/api/patchnotes', async (req, res) => {
     try {

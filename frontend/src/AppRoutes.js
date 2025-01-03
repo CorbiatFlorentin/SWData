@@ -8,6 +8,7 @@ import Occupation from './OccupationPage';
 import Codex from './CodexPage';
 import Toa from './ToaPage';
 import PatchNotes from './PatchNotesPage';
+import DetailsPage from './DetailsPage';
 
 
 function AppRoutes() {
@@ -21,6 +22,7 @@ function AppRoutes() {
       <Route path='/Codex' element={<Codex/>} />
       <Route path='/Toa' element={<Toa/>} />
       <Route path='/PatchNotes' element={<PatchNotes/>} />
+      <Route path="/details/:groupIndex" element={<DetailsPage />} />
 
     </Routes>
   );

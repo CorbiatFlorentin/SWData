@@ -11,6 +11,7 @@ import patchNotesImage from './Img/PatchNotes.jpeg';
 import Sidebar from './Sidebar';
 
 
+
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
 

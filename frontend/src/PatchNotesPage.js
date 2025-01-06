@@ -7,6 +7,7 @@ const PatchNotesPage = () => {
   const [loading, setLoading] = useState(true); // État de chargement
   const [error, setError] = useState(null); // État d'erreur
 
+
   useEffect(() => {
     const fetchArticles = async () => {
       try {
@@ -34,7 +35,6 @@ const PatchNotesPage = () => {
       <h2>Dernières mises à jour</h2>
       {loading && <p>Chargement des articles...</p>}
       {error && <p>{error}</p>}
-
       <div className="articles-container">
         {articles.length > 0 ? (
           articles.map((article, index) => (

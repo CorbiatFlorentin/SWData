@@ -1,0 +1,46 @@
+[
+    {
+        "model": "bestiary.monster",
+        "pk": 267,
+        "fields": {
+            "name": "Archangel",
+            "element": "fire",
+            "archetype": "support",
+            "base_hp": 7260,
+            "base_attack": 509,
+            "base_defense": 460,
+            "speed": 99,
+            "crit_rate": 15,
+            "crit_damage": 50,
+            "resistance": 15,
+            "accuracy": 0,
+            "skills": [1020, 1025, 1032],
+            "obtainable": true,
+            "is_awakened": false,
+            "family_id": 17000,
+            "awaken_bonus": "Increases CRI Rate by 15%"
+        }
+    },
+    {
+        "model": "bestiary.monster",
+        "pk": 268,
+        "fields": {
+            "name": "Velajuel",
+            "element": "fire",
+            "archetype": "support",
+            "base_hp": 10050,
+            "base_attack": 681,
+            "base_defense": 790,
+            "speed": 100,
+            "crit_rate": 30,
+            "crit_damage": 50,
+            "resistance": 15,
+            "accuracy": 0,
+            "skills": [1020, 1025, 1032],
+            "obtainable": true,
+            "is_awakened": true,
+            "family_id": 17000,
+            "awaken_bonus": ""
+        }
+    }
+]

@@ -4,7 +4,7 @@ import os
 
 # Chemin de la base de données et du fichier JSON
 db_name = 'mydatabase.db'
-json_file = './Test/test_bestiary.json'
+json_file = './bestiary.json'
 
 # Vérification des fichiers et répertoires
 if not os.path.isfile(db_name):
@@ -61,12 +61,23 @@ try:
 
     # Insertion des monstres
     for monster in monsters_data:
-        fields = monster['fields']
+        fields = monster.get('fields', {})
+        if not isinstance(fields, dict):
+            print(f"Erreur : 'fields' n'est pas un dictionnaire pour le monstre {monster}")
+            continue
+
         monster_id = monster['pk']
 
         # Mapping des éléments et types
-        element_id = element_map.get(fields.get('element', '').lower())
-        archetype_id = archetype_map.get(fields.get('archetype', '').lower())
+        element = fields.get('element', '')
+        if isinstance(element, str):
+            element = element.lower()
+        element_id = element_map.get(element)
+
+        archetype = fields.get('archetype', '')
+        if isinstance(archetype, str):
+            archetype = archetype.lower()
+        archetype_id = archetype_map.get(archetype)
 
         # Insertion dans monster_status
         try:

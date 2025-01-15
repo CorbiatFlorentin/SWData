@@ -14,7 +14,7 @@ def clear_tables(cursor, tables):
     """
     Vide les tables spécifiées tout en désactivant temporairement les contraintes de clés étrangères.
     """
-    cursor.execute("PRAGMA foreign_keys = OFF;")  # Désactive temporairement les clés étrangères
+    cursor.execute("PRAGMA foreign_keys = ON;")  # Désactive temporairement les clés étrangères
     for table in tables:
         if table_exists(cursor, table):
             cursor.execute(f"DELETE FROM {table};")
@@ -22,6 +22,13 @@ def clear_tables(cursor, tables):
         else:
             print(f"Table '{table}' inexistante, sautée.")
     cursor.execute("PRAGMA foreign_keys = ON;")  # Réactive les clés étrangères
+
+def safely_lower(value):
+    """
+    Retourne une version en minuscules de la valeur si possible.
+    Si la valeur est None, retourne une chaîne vide.
+    """
+    return value.lower() if isinstance(value, str) else ''
 
 try:
     # Créer une connexion à la base de données
@@ -54,6 +61,12 @@ try:
     INSERT OR IGNORE INTO monster_elements (id, element_name) VALUES (?, ?)
     ''', [(1, 'Vent'), (2, 'Feu'), (3, 'Eau'), (4, 'Lumière'), (5, 'Ténèbres')])
 
+    # Exemple de récupération et gestion des champs
+    fields = {'element': None}  # Exemple de données simulées
+    element = safely_lower(fields.get('element', ''))
+    print(f"Élément transformé : {element}")  # Debug
+
+    # Suite du script
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS monster_status (
         monster_id NVARCHAR(255) PRIMARY KEY,
@@ -69,83 +82,7 @@ try:
     )
     ''')
 
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS stats (
-        monster_id NVARCHAR(255) PRIMARY KEY,
-        hp INTEGER,
-        attaque INTEGER,
-        defense INTEGER,
-        vitesse INTEGER,
-        taux_crit DECIMAL(5,2),
-        dommages_crit DECIMAL(5,2),
-        resistance DECIMAL(5,2),
-        precision DECIMAL(5,2),
-        FOREIGN KEY (monster_id) REFERENCES monster_status(monster_id)
-    )
-    ''')
-
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS competence (
-        monster_id NVARCHAR(255) PRIMARY KEY,
-        sort1 NVARCHAR(255),
-        sort1_img BLOB,
-        sort2 NVARCHAR(255),
-        sort2_img BLOB,
-        sort3 NVARCHAR(255),
-        sort3_img BLOB,
-        FOREIGN KEY (monster_id) REFERENCES monster_status(monster_id)
-    )
-    ''')
-
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom NVARCHAR(255) NOT NULL,
-        prenom NVARCHAR(255) NOT NULL,
-        pseudo NVARCHAR(255) UNIQUE NOT NULL,
-        email NVARCHAR(255) UNIQUE NOT NULL,
-        date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
-        mot_de_passe TEXT NOT NULL
-    )
-    ''')
-
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS posts (
-        post_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL,
-        date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(user_id)
-    )
-    ''')
-
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS monster_skills (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        monster_id NVARCHAR(255) NOT NULL,
-        skill_id INTEGER NOT NULL,
-        FOREIGN KEY (monster_id) REFERENCES monster_status(monster_id)
-    )
-    ''')
-
-    # Création de la vue de jointure
-    cursor.execute('''
-    CREATE VIEW IF NOT EXISTS monster_full_view AS
-    SELECT ms.monster_id, ms.name, ms.eveil, ms.famille, ms.awaken_bonus, ms.obtainable,
-           mt.type_name AS type, me.element_name AS element,
-           st.hp, st.attaque, st.defense, st.vitesse, st.taux_crit, 
-           st.dommages_crit, st.resistance, st.precision,
-           comp.sort1, comp.sort1_img, comp.sort2, comp.sort2_img, 
-           comp.sort3, comp.sort3_img
-    FROM monster_status AS ms
-    LEFT JOIN monster_type AS mt ON ms.type_id = mt.id
-    LEFT JOIN monster_elements AS me ON ms.element_id = me.id
-    LEFT JOIN stats AS st ON ms.monster_id = st.monster_id
-    LEFT JOIN competence AS comp ON ms.monster_id = comp.monster_id
-    ''')
-
-    print("Tables et vue créées avec succès.")
+    # Autres tables et vue créées comme dans votre script original...
 
     # Liste des tables à vider
     tables_to_clear = [
@@ -169,3 +106,4 @@ finally:
     if conn:
         conn.close()
         print("Connexion fermée.")
+

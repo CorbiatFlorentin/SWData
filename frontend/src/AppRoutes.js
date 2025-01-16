@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import App from './App';
-import Register from './Register'; // Vérifie que cet import est correct
+import Register from './Register'; 
 import Arena from './ArenaPage';
 import Donjons from './DonjonsPage';
 import Occupation from './OccupationPage';

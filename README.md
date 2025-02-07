@@ -16,7 +16,7 @@ Ce projet vise à faciliter la planification et l'organisation des sièges en fo
 ### 1️⃣ Cloner le projet
 ```bash
 git clone https://github.com/CorbiatFlorentin/SWData
-cd siege-manager
+cd SWDATA
 ```
 
 ### 2️⃣ Installation des dépendances

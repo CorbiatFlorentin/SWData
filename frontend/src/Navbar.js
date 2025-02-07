@@ -1,48 +1,64 @@
-import React from 'react';
-import { FaUser } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { useUser } from './UserContext';
 import { Link } from 'react-router-dom';
-import { useUser } from './UserContext'; 
-import './App.css';
+import '@fortawesome/fontawesome-free/css/all.min.css'; 
+import './Navbar.css';
+
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const { user } = useUser(); // Récupérer l'utilisateur connecté
+  const { user, logout } = useUser();
+  const [showMenu, setShowMenu] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
 
-  const redirectToHome = () => {
-    navigate('/');
+  // Gérer l'affichage du menu
+  const handleMouseEnter = () => {
+    if (timeoutId) clearTimeout(timeoutId); // Annule le timeout si l'utilisateur revient
+    setShowMenu(true);
   };
+
+  const handleMouseLeave = () => {
+    // Délai de 3 secondes avant de cacher le menu
+    const id = setTimeout(() => {
+      setShowMenu(false);
+    }, 3000);
+    setTimeoutId(id);
+  };
+
+  // Nettoyer le timeout si le composant est démonté
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, [timeoutId]);
 
   return (
     <nav className="navbar">
-      <button className="navbar-brand" onClick={redirectToHome}>
-        <strong>Sw Data</strong>
-      </button>
+      <div className="nav-links">
+        <Link to="/">Accueil</Link>
+        <Link to="/occupation">Occupation</Link>
+      </div>
 
-      {/* Barre de recherche */}
-      <form className="d-flex">
-        <input
-          className="form-control"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <button className="btn btn-outline-success" type="submit">
-          Search
-        </button>
-      </form>
+      <div 
+        className="nav-user" 
+        onMouseEnter={handleMouseEnter} 
+        onMouseLeave={handleMouseLeave}
+      >
+        <i className="fas fa-user-circle user-icon"></i>
 
-      {/* Icône de connexion */}
-      <Link to="./Register" className="btn btn-link">
-        <FaUser size={24} />
-        {user && <span className="navbar-user">{user.pseudo}</span>} {/* Afficher le pseudo */}
-      </Link>
+        {showMenu && (
+          <div className="user-menu">
+            {user ? (
+              <>
+                <p>👤 {user.pseudo}</p>
+                <button onClick={logout} className="logout-button">Se déconnecter</button>
+              </>
+            ) : (
+              <Link to="/login" className="login-button">Se connecter</Link>
+            )}
+          </div>
+        )}
+      </div>
     </nav>
   );
 };
 
 export default Navbar;
-
-
-
-

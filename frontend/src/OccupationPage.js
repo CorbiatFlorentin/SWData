@@ -1,7 +1,17 @@
-// src/OccupationPage.js
-import React from 'react'; 
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from './UserContext';
 
 const OccupationPage = () => {
+  const navigate = useNavigate();
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/Register');
+    }
+  }, [user, navigate]);
+
   return (
     <div>
       <div className="page-container">
@@ -11,13 +21,9 @@ const OccupationPage = () => {
           pertinentes concernant les stratégies, les personnages et les équipements
           recommandés pour progresser dans cette section du jeu.
         </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula libero non est pretium,
-          a tristique tortor sollicitudin. Aliquam erat volutpat. Nulla facilisi.
-        </p>
       </div>
     </div>
   );
-}
+};
 
 export default OccupationPage;

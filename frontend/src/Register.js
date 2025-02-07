@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useUser } from './UserContext'; 
 
 const Register = () => {
-  const { setUser } = useUser(); 
+  const { setUser, login } = useUser(); 
   const [registerData, setRegisterData] = useState({
     nom: '',
     prenom: '',
@@ -59,6 +59,7 @@ const Register = () => {
   };
 
   // Soumission du formulaire de connexion
+  // Connexion
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -67,11 +68,10 @@ const Register = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
       });
-
+  
       const data = await response.json();
       if (response.ok) {
-        setUser({ pseudo: data.pseudo });
-        localStorage.setItem('token', data.token); // Stocker le token
+        login({ pseudo: data.pseudo }, data.token); // Utilisation correcte de login
       } else {
         alert(data.error);
       }
@@ -79,6 +79,8 @@ const Register = () => {
       console.error('Erreur lors de la connexion:', error);
     }
   };
+  
+
 
   // Soumission du formulaire de réinitialisation de mot de passe
   const handleResetSubmit = async (e) => {

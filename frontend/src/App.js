@@ -9,6 +9,7 @@ import toaImage from './Img/Toa.jpeg';
 import codexImage from './Img/Codex.jpeg';
 import patchNotesImage from './Img/PatchNotes.jpeg';
 import Sidebar from './Sidebar';
+import Navbar from './Navbar';
 
 
 
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <div>
+      <Navbar />
       <Sidebar />
       <div className="container">
         <div className="slide">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './style/Arena.css';
-import details from './DetailsPage';
+import '../assets/style/Arena.css';
+import details from '../pages/DetailsPage';
 
 const ArenaPage = () => {
   const [items, setItems] = useState([]);

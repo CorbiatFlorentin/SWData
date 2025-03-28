@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useUser } from '../UserContext';
 import { Link } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css'; 
-import './Navbar.css';
+import '../assets/style/Navbar.css';
 
 
 const Navbar = () => {

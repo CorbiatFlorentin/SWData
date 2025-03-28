@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import './style/DetailsPage.css';
+import '../assets/style/DetailsPage.css';
 
 const DetailsPage = () => {
   const { groupIndex } = useParams(); // Récupère l'index du groupe

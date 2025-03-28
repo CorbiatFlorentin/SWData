@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './App.css';
-import Button from './Button';
-import arenaImage from './Img/Arena.jpeg';
-import occupationImage from './Img/Occupation.jpeg';
-import donjonsImage from './Img/Donjons.jpeg';
-import toaImage from './Img/Toa.jpeg';
-import codexImage from './Img/Codex.jpeg';
-import patchNotesImage from './Img/PatchNotes.jpeg';
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
+import './assets/style/App.css';
+import Button from './components/Button';
+import arenaImage from './assets/Img/Arena.jpeg';
+import occupationImage from './assets/Img/Occupation.jpeg';
+import donjonsImage from './assets/Img/Donjons.jpeg';
+import toaImage from './assets/Img/Toa.jpeg';
+import codexImage from './assets/Img/Codex.jpeg';
+import patchNotesImage from './assets/Img/PatchNotes.jpeg';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
 
 
 

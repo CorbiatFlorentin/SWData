@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './style/PatchNotes.css';
+import '../assets/style/PatchNotes.css';
 
 const PatchNotesPage = () => {
   const [articles, setArticles] = useState([]); // Stocker les articles récupérés

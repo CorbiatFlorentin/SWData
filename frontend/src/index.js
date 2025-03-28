@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom'; // Importez BrowserRouter
-import './App.css';
-import AppRoutes from './AppRoutes'; 
-import Navbar from './Navbar';
+import './assets/style/App.css';
+import AppRoutes from './routes/AppRoutes'; 
+import Navbar from './components/Navbar';
 import { UserProvider } from './UserContext';
 
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import App from '../App';
-import Register from './Register'; 
-import Arena from './ArenaPage';
-import Donjons from './DonjonsPage';
-import Occupation from './OccupationPage';
-import Codex from './CodexPage';
-import Toa from './ToaPage';
-import PatchNotes from './PatchNotesPage';
-import DetailsPage from './DetailsPage';
+import Register from '../pages/RegisterPage'; 
+import Arena from '../pages/ArenaPage';
+import Donjons from '../pages/DonjonsPage';
+import Occupation from '../pages/OccupationPage';
+import Codex from '../pages/CodexPage';
+import Toa from '../pages/ToaPage';
+import PatchNotes from '../pages/PatchNotesPage';
+import DetailsPage from '../pages/DetailsPage';
 import AdminPage from "../pages/AdminPage";
 
 

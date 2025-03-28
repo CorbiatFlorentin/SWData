@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css'; 
+import '../assets/style/App.css'; 
 
 function Sidebar() {
   const links = [

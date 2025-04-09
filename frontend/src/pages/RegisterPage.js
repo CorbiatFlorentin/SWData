@@ -18,28 +18,24 @@ const Register = () => {
 
   const [emailReset, setEmailReset] = useState('');
 
-  // Gestion des champs pour le formulaire d'inscription
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
     setRegisterData({ ...registerData, [name]: value });
   };
 
-  // Gestion des champs pour le formulaire de connexion
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
   };
 
-  // Gestion des champs pour la réinitialisation de mot de passe
   const handleResetChange = (e) => {
     setEmailReset(e.target.value);
   };
 
-  // Soumission du formulaire d'inscription
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registerData)
@@ -49,7 +45,7 @@ const Register = () => {
       if (response.ok) {
         alert('Inscription réussie');
         setUser({ pseudo: registerData.pseudo }); 
-        localStorage.setItem('token', data.token); // Stocker le token
+        localStorage.setItem('token', data.token);
       } else {
         alert(data.error);
       }
@@ -58,12 +54,10 @@ const Register = () => {
     }
   };
 
-  // Soumission du formulaire de connexion
-  // Connexion
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
@@ -71,7 +65,7 @@ const Register = () => {
   
       const data = await response.json();
       if (response.ok) {
-        login({ pseudo: data.pseudo }, data.token); // Utilisation correcte de login
+        login({ pseudo: data.pseudo }, data.token);
       } else {
         alert(data.error);
       }
@@ -79,14 +73,11 @@ const Register = () => {
       console.error('Erreur lors de la connexion:', error);
     }
   };
-  
 
-
-  // Soumission du formulaire de réinitialisation de mot de passe
   const handleResetSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/reset-password', {
+      const response = await fetch('http://localhost:5000/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailReset })
@@ -103,40 +94,33 @@ const Register = () => {
     }
   };
 
-  // Suppression de compte
   const handleDeleteAccount = async () => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
-        try {
-            const token = localStorage.getItem('token'); // Récupération du token JWT depuis le stockage local
-            if (!token) {
-                alert('Vous devez être connecté pour supprimer votre compte.');
-                return;
-            }
+    if (window.confirm('Etes-vous sûr de vouloir supprimer votre compte ?')) {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return alert('Vous devez être connecté.');
 
-            const response = await fetch('http://localhost:5000/delete-account', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Envoi du token dans l'en-tête
-                }
-            });
+        const response = await fetch('http://localhost:5000/users/delete-account', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
-            if (!response.ok) {
-                const data = await response.json();
-                alert(data.error);
-                return;
-            }
-
-            alert('Compte supprimé avec succès');
-            setUser(null); // Déconnexion
-            localStorage.removeItem('token'); // Suppression du token local
-        } catch (error) {
-            console.error('Erreur lors de la suppression du compte:', error);
+        const data = await response.json();
+        if (response.ok) {
+          alert('Compte supprimé avec succès');
+          setUser(null);
+          localStorage.removeItem('token');
+        } else {
+          alert(data.error);
         }
+      } catch (error) {
+        console.error('Erreur lors de la suppression du compte:', error);
+      }
     }
   };
-
-
 
   return (
     <div className="auth-wrapper">
@@ -152,7 +136,7 @@ const Register = () => {
             <button type="submit">S'inscrire</button>
           </form>
         </div>
-  
+
         <div className="auth-section login-section">
           <h2>Se connecter</h2>
           <form onSubmit={handleLoginSubmit} className="register-form">
@@ -173,4 +157,3 @@ const Register = () => {
 };
 
 export default Register;
-

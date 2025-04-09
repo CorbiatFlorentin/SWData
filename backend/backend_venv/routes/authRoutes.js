@@ -13,8 +13,11 @@ router.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
-    db.run(`INSERT INTO users (nom, prenom, pseudo, email, mot_de_passe, role) VALUES (?, ?, ?, ?, ?, ?)`,
-        [nom, prenom, pseudo, email, hashedPassword, role], function (err) {
+    const now = new Date().toISOString();
+
+    db.run(`INSERT INTO users (nom, prenom, pseudo, email, mot_de_passe, role, created_at, last_activity) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [nom, prenom, pseudo, email, hashedPassword, role, now, now], function (err) {
             if (err) {
                 if (err.message.includes("UNIQUE constraint failed")) {
                     return res.status(400).json({ error: "L'email est déjà utilisé" });
@@ -38,6 +41,11 @@ router.post('/login', (req, res) => {
         if (!isPasswordValid) return res.status(401).json({ error: 'Mot de passe incorrect' });
 
         const token = generateToken(user);
+
+        // Mise à jour de la dernière activité
+        const now = new Date().toISOString();
+        db.run(`UPDATE users SET last_activity = ? WHERE id = ?`, [now, user.id]);
+
         res.status(200).json({ message: 'Connexion réussie', token });
     });
 });

@@ -44,7 +44,7 @@ const AdminPage = () => {
 
             const result = await res.json();
             if (res.ok) {
-                setUsers(users.filter((u) => u.id !== id));
+                setUsers(users.filter((u) => u.user_id !== id));
             } else {
                 alert(result.error);
             }
@@ -58,6 +58,8 @@ const AdminPage = () => {
         const newRole = role === "admin" ? "user" : "admin";
 
         try {
+            console.log("Changing role for ID:", id);
+            
             const res = await fetch(`http://localhost:5000/admin/users/${id}/role`, {
                 method: "PUT",
                 headers: {
@@ -69,7 +71,7 @@ const AdminPage = () => {
 
             const result = await res.json();
             if (res.ok) {
-                setUsers(users.map((u) => (u.id === id ? { ...u, role: newRole } : u)));
+                setUsers(users.map((u) => (u.user_id === id ? { ...u, role: newRole } : u)));
             } else {
                 alert(result.error);
             }

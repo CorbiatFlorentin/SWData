@@ -54,7 +54,7 @@
   
   .logout-button {
     background: #ff4d4d;
-    color: white;
+    color: rgb(13, 238, 50);
     border: none;
     padding: 5px 10px;
     cursor: pointer;
@@ -71,4 +71,18 @@
   .logout-button:hover {
     background: #cc0000;
   }
+  .register-button {
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  .register-button:hover {
+    background: #0056b3;
+  }
+  
   

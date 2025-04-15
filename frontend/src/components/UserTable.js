@@ -1,5 +1,5 @@
 import React from "react";
-import "../assets/style/UserTable.css"; // Crée ce fichier pour le style si tu veux
+import "../assets/style/UserTable.css";
 
 const UserTable = ({ users, onDelete, onRoleChange }) => {
     return (
@@ -19,20 +19,20 @@ const UserTable = ({ users, onDelete, onRoleChange }) => {
             </thead>
             <tbody>
                 {users.map((user) => (
-                    <tr key={user.id}>
-                        <td>{user.id}</td>
+                    <tr key={user.user_id}>
+                        <td>{user.user_id}</td>
                         <td>{user.nom}</td>
                         <td>{user.prenom}</td>
                         <td>{user.pseudo}</td>
                         <td>{user.email}</td>
                         <td>{user.role}</td>
-                        <td>{user.date_creation?.slice(0, 10) || "-"}</td>
-                        <td>{user.derniere_connexion?.slice(0, 10) || "-"}</td>
+                        <td>{user.created_at?.slice(0, 10) || "-"}</td>
+                        <td>{user.last_activity?.slice(0, 10) || "-"}</td>
                         <td>
-                            <button onClick={() => onDelete(user.id)} className="btn-delete">
+                            <button onClick={() => onDelete(user.user_id)} className="btn-delete">
                                 Supprimer
                             </button>
-                            <button onClick={() => onRoleChange(user.id, user.role)} className="btn-role">
+                            <button onClick={() => onRoleChange(user.user_id, user.role)} className="btn-role">
                                 Switch Role
                             </button>
                         </td>

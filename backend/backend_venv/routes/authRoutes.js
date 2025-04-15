@@ -44,7 +44,7 @@ router.post('/login', (req, res) => {
 
         // Mise à jour de la dernière activité
         const now = new Date().toISOString();
-        db.run(`UPDATE users SET last_activity = ? WHERE id = ?`, [now, user.id]);
+        db.run(`UPDATE users SET last_activity = ? WHERE user_id = ?`, [now, user.id]);
 
         res.status(200).json({ message: 'Connexion réussie', token });
     });

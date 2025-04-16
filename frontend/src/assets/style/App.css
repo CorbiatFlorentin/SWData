@@ -4,10 +4,6 @@
   box-sizing: border-box;
 }
 
-body {
-  background: #ea9a31;
-  overflow: hidden;
-}
 
 .container {
   position: absolute;
@@ -16,7 +12,6 @@ body {
   transform: translate(-50%, -50%);
   width: 1000px;
   height: 600px;
-  background: #ea9a31;
   border: #000;
 }
 

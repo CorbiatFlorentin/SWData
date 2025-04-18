@@ -88,3 +88,29 @@
   height: 100%;
   object-fit: cover;
 }
+
+/* ───── Sélecteur d'équipes ───── */
+.team-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.team-tab,
+.add-team {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #999;
+  background: #f4f4f4;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.team-tab.active {
+  background: #d0d0ff;
+  font-weight: 600;
+}
+
+/* (le reste de ton CSS précédent reste identique) */
+

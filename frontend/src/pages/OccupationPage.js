@@ -3,50 +3,84 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import '../assets/style/OccupationPage.css';
 
+import blueTower from '../assets/Img/tower_icon.png';
+
 // ─────────────────────────────────────────────────────────────
-// 1) Tableau décrivant chaque tour bleue (coords en %)
-import blueTower from '../assets/Img/tower_icon.png';   // ↰ adapte le chemin
+// 1) Configuration des tours bleues (coords en %)
 const blueTowers = [
-  { id: 1, name: 'Tour 1', left: '12%', top: '80%' },
-  { id: 2, name: 'Tour 2', left: '25%', top: '66%' },
-  { id: 3, name: 'Tour 3', left: '19%', top: '55%' },
-  { id: 4, name: 'Tour 4', left: '31%', top: '50%' },
-  // … ajoute le reste de tes tours
+  { id: 1, name: 'Tour 1', left: '16.5%', top: '65.5%' },
+  { id: 2, name: 'Tour 2', left: '28.5%', top: '81.5%' },
+  { id: 3, name: 'Tour 3', left: '20%', top: '55%' },
+  { id: 4, name: 'Tour 4', left: '30%', top: '64%' },
+  { id: 5, name: 'Tour 5', left: '36%', top: '74%' },
+  { id: 6, name: 'Tour 6', left: '22%', top: '47%' },
+  { id: 7, name: 'Tour 7', left: '28.5%', top: '47.5%' },
+  { id: 8, name: 'Tour 8', left: '36.5%', top: '50%' },
+  { id: 9, name: 'Tour 9', left: '44.5%', top: '53%' },
+  { id: 10, name: 'Tour 10', left: '43.5%', top: '64%' },
+  { id: 11, name: 'Tour 11', left: '45.5%', top: '71%' },
+  { id: 12, name: 'Tour 12', left: '46.5%', top: '82%' },
 ];
 // ─────────────────────────────────────────────────────────────
+
+const MAX_TEAMS = 5; 
 
 const OccupationPage = () => {
   const navigate = useNavigate();
   const { user } = useUser();
 
-  /* ────────── Auth guard (inchangé) ────────── */
+  /* ───── Auth guard ───── */
   useEffect(() => {
     if (!user) navigate('/register');
   }, [user, navigate]);
 
-  /* ────────── État local ────────── */
-  const [selectedTower, setSelectedTower] = useState(null);      // tour cliquée
-  const [monsters, setMonsters]         = useState([null, null, null]); // 3 slots
+  /* ───── State global : composition par tour ───── */
+  const [towerTeams, setTowerTeams] = useState(() => {
+    const base = {};
+    blueTowers.forEach(t => {
+      base[t.id] = [Array(3).fill(null)]; // 1 équipe vide par défaut
+    });
+    return base;
+  });
 
-  /* Chargement image monstre */
-  const handleFileChange = (index, e) => {
+  const [selectedTower, setSelectedTower] = useState(null); // objet tour
+  const [teamIdx, setTeamIdx] = useState(0); // index équipe courante
+
+  /* ───── Gestion image monstre ───── */
+  const handleFileChange = (slotIdx, e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    // Créé une URL locale pour pré‑afficher l’image
     const url = URL.createObjectURL(file);
 
-    setMonsters(prev => {
-      const next = [...prev];
-      next[index] = url;
-      return next;
+    setTowerTeams(prev => {
+      const copy = { ...prev };
+      const teams = [...copy[selectedTower.id]];
+      const monsters = [...teams[teamIdx]];
+      monsters[slotIdx] = url;
+      teams[teamIdx] = monsters;
+      copy[selectedTower.id] = teams;
+      return copy;
     });
   };
 
-  /* ────────── Rendu ────────── */
+  /* ───── Ajout d'une équipe ───── */
+  const addTeam = () => {
+    if (!selectedTower) return;
+    setTowerTeams(prev => {
+      const copy = { ...prev };
+      const teams = [...copy[selectedTower.id]];
+      if (teams.length >= MAX_TEAMS) return prev; // protective
+      teams.push(Array(3).fill(null));
+      copy[selectedTower.id] = teams;
+      return copy;
+    });
+    setTeamIdx(prev => prev + 1); // bascule vers la nouvelle équipe
+  };
+
+  /* ───── Rendu ───── */
   return (
     <div className="occupation-container">
-      {/* 1) Carte : rend chaque tour bleue */}
+      {/* Carte : tours */}
       {blueTowers.map(tower => (
         <div
           key={tower.id}
@@ -54,23 +88,17 @@ const OccupationPage = () => {
           style={{ left: tower.left, top: tower.top }}
           onClick={() => {
             setSelectedTower(tower);
-            setMonsters([null, null, null]);       // réinitialise les slots
+            setTeamIdx(0); // toujours première équipe par défaut
           }}
         >
           <img src={blueTower} alt={tower.name} />
         </div>
       ))}
 
-      {/* 2) Overlay + conteneur */}
+      {/* Overlay + modal */}
       {selectedTower && (
-        <div
-          className="overlay"
-          onClick={() => setSelectedTower(null)} /* clic hors conteneur */
-        >
-          <div
-            className="modal"
-            onClick={e => e.stopPropagation()}     /* bloque la propagation */
-          >
+        <div className="overlay" onClick={() => setSelectedTower(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
             <button
               className="close-btn"
               onClick={() => setSelectedTower(null)}
@@ -81,11 +109,31 @@ const OccupationPage = () => {
 
             <h2>{selectedTower.name}</h2>
 
+            {/* Sélecteur d'équipes */}
+            <div className="team-selector">
+              {towerTeams[selectedTower.id].map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`team-tab ${idx === teamIdx ? 'active' : ''}`}
+                  onClick={() => setTeamIdx(idx)}
+                >
+                  Équipe {idx + 1}
+                </button>
+              ))}
+
+              {towerTeams[selectedTower.id].length < MAX_TEAMS && (
+                <button className="add-team" onClick={addTeam}>
+                  + Équipe
+                </button>
+              )}
+            </div>
+
+            {/* Cartes monstres pour l'équipe sélectionnée */}
             <div className="cards">
-              {monsters.map((slot, idx) => (
-                <label key={idx} className="card">
-                  {slot ? (
-                    <img src={slot} alt={`Monstre ${idx + 1}`} />
+              {towerTeams[selectedTower.id][teamIdx].map((monster, slotIdx) => (
+                <label key={slotIdx} className="card">
+                  {monster ? (
+                    <img src={monster} alt={`Monstre ${slotIdx + 1}`} />
                   ) : (
                     '+ Monstre'
                   )}
@@ -93,7 +141,7 @@ const OccupationPage = () => {
                     type="file"
                     accept="image/*"
                     hidden
-                    onChange={e => handleFileChange(idx, e)}
+                    onChange={e => handleFileChange(slotIdx, e)}
                   />
                 </label>
               ))}

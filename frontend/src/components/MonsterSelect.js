@@ -20,7 +20,7 @@ export default function MonsterSelect({ onPick, onClose }) {
 
   return (
     <div className="ms-backdrop" onClick={onClose}>
-      <div className="ms-panel" onClick={e => e.stopPropagation()}>
+      <div className="ms-panel right" onClick={e => e.stopPropagation()}>
         <input
           placeholder="Recherche…"
           value={search}
@@ -32,7 +32,7 @@ export default function MonsterSelect({ onPick, onClose }) {
             <button
               key={m.id}
               className="ms-card"
-              onClick={() => { onPick(m); onClose(); }}
+              onClick={() => { onPick(m.img); onClose(); }}
             >
               {/* on affiche l’URL déjà prête : m.img */}
               <img src={`http://localhost:5000${m.img}`} alt={m.name} />

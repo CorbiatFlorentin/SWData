@@ -7,7 +7,7 @@ const { Monster } = require('../database/models');
 
 const ICON_DIR   = path.join(__dirname, '..', 'database', 'monsters_icons');
 const LATIN_ONLY = /^[A-Za-z0-9 .’\-]+$/; 
-const ANGELMON = /angelmon/i    // mêmes filtres qu’avant
+const ANGELMON = /angelmon/i    
 
 router.get('/', async (req, res, next) => {
   try {

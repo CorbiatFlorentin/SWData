@@ -64,29 +64,27 @@
 /* ────────── Cartes Monster ────────── */
 .cards {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
+  gap: 12px;
+  margin-top: 14px;
 }
 
 .card {
-  flex: 1;
-  height: 60px;
-  background: #eeeeee;
-  border: 2px dashed #c4c4c4;
-  border-radius: 4px;
+  width: 64px;
+  height: 64px;
+  border: 2px dashed #b0b0b0;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #777;
-  font-size: 12px;
   cursor: pointer;
-  overflow: hidden;
+  border-radius: 4px;
 }
 
 .card img {
-  width: 100%;
-  height: 100%;
+  width: 300%;
+  height: 150%;
   object-fit: cover;
+  border-radius: 2px;
 }
 
 /* ───── Sélecteur d'équipes ───── */
@@ -111,6 +109,59 @@
   background: #d0d0ff;
   font-weight: 600;
 }
+
+/* bouton flottant en haut-droite */
+.team-list-toggle {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9000;
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* panneau latéral qui se déploie depuis la gauche du bouton */
+.team-list-panel {
+  position: fixed;
+  top: 48px;           /* juste sous le bouton */
+  right: 12px;
+  width: 220px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.25);
+  padding: 12px 16px;
+  z-index: 8999;
+}
+
+.team-list-panel h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.team-list-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.team-list-panel li {
+  padding: 6px 4px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.team-list-panel li:hover {
+  background: #f1f1f1;
+}
+
 
 /* (le reste de ton CSS précédent reste identique) */
 

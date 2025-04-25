@@ -3,7 +3,6 @@ import '../assets/style/App.css';
 
 function Sidebar() {
   const links = [
-    { name: 'Your Custom Page', url: '/custom-page' },
     { name: 'Twitch', url: 'https://www.twitch.tv/'},
     { name: 'Coupons SW', url: 'https://swq.jp/l/fr-FR/'} 
   ];

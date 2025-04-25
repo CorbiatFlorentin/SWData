@@ -17,15 +17,17 @@ router.get('/', async (req, res, next) => {
       order      : [['name', 'ASC']]
     });
 
+    const totalAvantFiltrage = raws.length;
+
     /** Memo pour éviter les doublons  */
     const seenNames = new Set();
 
     const monsters = raws.reduce((acc, m) => {
       if (!LATIN_ONLY.test(m.name)) return acc; 
-      if (ANGELMON.test(m.name)) return acc;           // filtrage nom
-      if (seenNames.has(m.name)) return acc;               // déjà pris
+      if (ANGELMON.test(m.name)) return acc;           
+      if (seenNames.has(m.name)) return acc;               
       const iconPath = path.join(ICON_DIR, m.image_filename);
-      if (!fs.existsSync(iconPath)) return acc;            // icône manquante
+      if (!fs.existsSync(iconPath)) return acc;           
 
       seenNames.add(m.name);
       acc.push({
@@ -35,6 +37,8 @@ router.get('/', async (req, res, next) => {
       });
       return acc;
     }, []);
+
+    console.log(`[GET /api/monsters] avant : ${totalAvantFiltrage} — après : ${monsters.length}`);
 
     res.json(monsters);
   } catch (err) {

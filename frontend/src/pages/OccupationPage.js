@@ -7,50 +7,83 @@ import blueTower from "../assets/Img/tower_icon.png";
 import MonsterSelect from "../components/MonsterSelect";
 
 // ─────────────────────────────────────────────────────────────
-// Coordonnées des tours bleues (en %)
 const blueTowers = [
-  { id: 1, name: "Tour 1", left: "16.5%", top: "65.5%" },
-  { id: 2, name: "Tour 2", left: "28.5%", top: "81.5%" },
-  { id: 3, name: "Tour 3", left: "20%",  top: "55%"   },
-  { id: 4, name: "Tour 4", left: "30%",  top: "64%"   },
-  { id: 5, name: "Tour 5", left: "36%",  top: "74%"   },
-  { id: 6, name: "Tour 6", left: "22%",  top: "47%"   },
-  { id: 7, name: "Tour 7", left: "28.5%",top: "47.5%" },
-  { id: 8, name: "Tour 8", left: "36.5%",top: "50%"   },
-  { id: 9, name: "Tour 9", left: "44.5%",top: "53%"   },
-  { id: 10, name:"Tour 10", left: "43.5%",top: "64%"  },
-  { id: 11, name:"Tour 11", left: "45.5%",top: "71%"  },
-  { id: 12, name:"Tour 12", left: "46.5%",top: "82%"  },
+  { id: 1,  name: "Tour 1",  left: "16.5%", top: "65.5%" },
+  { id: 2,  name: "Tour 2",  left: "28.5%", top: "81.5%" },
+  { id: 3,  name: "Tour 3",  left: "20%",   top: "55%"   },
+  { id: 4,  name: "Tour 4",  left: "30%",   top: "64%"   },
+  { id: 5,  name: "Tour 5",  left: "36%",   top: "74%"   },
+  { id: 6,  name: "Tour 6",  left: "22%",   top: "47%"   },
+  { id: 7,  name: "Tour 7",  left: "28.5%", top: "47.5%" },
+  { id: 8,  name: "Tour 8",  left: "36.5%", top: "50%"   },
+  { id: 9,  name: "Tour 9",  left: "44.5%", top: "53%"   },
+  { id: 10, name: "Tour 10", left: "43.5%", top: "64%"   },
+  { id: 11, name: "Tour 11", left: "45.5%", top: "71%"   },
+  { id: 12, name: "Tour 12", left: "46.5%", top: "82%"   },
 ];
-// ─────────────────────────────────────────────────────────────
 
 const MAX_TEAMS = 5;
+const API      = "http://localhost:5000";
 
 export default function OccupationPage() {
-  const navigate = useNavigate();
-  const { user } = useUser();
+  const navigate      = useNavigate();
+  const { user }      = useUser();
+  const token         = localStorage.getItem("token");
 
-  /* ───── Auth guard ───── */
+  /* ───────── Auth guard ───────── */
   useEffect(() => {
     if (!user) navigate("/register");
   }, [user, navigate]);
 
-  /* ───── state : équipes par tour ───── */
-  const [towerTeams, setTowerTeams] = useState(() => {
-    const init = {};
-    blueTowers.forEach((t) => (init[t.id] = [Array(3).fill(null)]));
-    return init;
+  /* ───────── state init ───────── */
+  const [towerTeams,   setTowerTeams] = useState(() => {
+    const o = {}; blueTowers.forEach((t) => (o[t.id] = [Array(3).fill(null)]));
+    return o;
   });
-
   const [selectedTower, setSelectedTower] = useState(null);
-  const [teamIdx,       setTeamIdx]       = useState(0);
-  const [selectInfo,    setSelectInfo]    = useState(null); // {teamIdx, slotIdx}
-  const [showList,      setShowList]      = useState(false); // panneau latéral
+  const [teamIdx,        setTeamIdx]       = useState(0);
+  const [selectInfo,     setSelectInfo]    = useState(null);
+  const [showList,       setShowList]      = useState(false);
 
-  /* ───── Helper : au moins un monstre rempli ? ───── */
+  /* ───────── LOAD depuis backend au 1er rendu ───────── */
+  useEffect(() => {
+    if (!token) return;
+    fetch(`${API}/teams`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((rows) => {
+        const copy = { ...towerTeams };
+        rows.forEach((row) => {
+          const arr = row.monsters ? row.monsters.split(",").map((x) => (x ? `/static/monsters/${x}` : null)) : [null, null, null];
+          if (!copy[row.tower_id]) copy[row.tower_id] = [];
+          copy[row.tower_id][row.team_idx] = arr;
+        });
+        setTowerTeams(copy);
+      })
+      .catch(console.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* ───────── helper de sauvegarde ───────── */
+  const saveTeam = (towerId, teamIdx, monsters) => {
+    if (!token) return;
+    fetch(`${API}/teams`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        tower_id: towerId,
+        team_idx: teamIdx,
+        monsters: monsters.map((m) => (m ? m.split("/").pop() : null)), // ne stocke que le filename
+      }),
+    }).catch(console.error);
+  };
+
+  /* ───────── logique util ───────── */
   const hasAnyMonster = (teams) => teams.some((team) => team.some(Boolean));
+  const filledTowers  = blueTowers.filter((t) => hasAnyMonster(towerTeams[t.id]));
 
-  /* ───── Ajout d'une équipe ───── */
   const addTeam = () => {
     if (!selectedTower) return;
     setTowerTeams((prev) => {
@@ -59,15 +92,13 @@ export default function OccupationPage() {
       if (teams.length >= MAX_TEAMS) return prev;
       teams.push(Array(3).fill(null));
       copy[selectedTower.id] = teams;
+      // pas besoin de save ici (équipe encore vide)
       return copy;
     });
     setTeamIdx((idx) => idx + 1);
   };
 
-  /* ───── tours avec compo enregistrée ───── */
-  const filledTowers = blueTowers.filter((t) => hasAnyMonster(towerTeams[t.id]));
-
-  /* ───── Rendu ───── */
+  /* ───────── render ───────── */
   return (
     <div className="occupation-container">
       {/* bouton flottant */}
@@ -75,7 +106,6 @@ export default function OccupationPage() {
         Mes teams ({filledTowers.length})
       </button>
 
-      {/* panneau latéral */}
       {showList && (
         <div className="team-list-panel">
           <h3>Compositions enregistrées</h3>
@@ -84,14 +114,7 @@ export default function OccupationPage() {
           ) : (
             <ul>
               {filledTowers.map((t) => (
-                <li
-                  key={t.id}
-                  onClick={() => {
-                    setSelectedTower(t);
-                    setTeamIdx(0);
-                    setShowList(false);
-                  }}
-                >
+                <li key={t.id} onClick={() => { setSelectedTower(t); setTeamIdx(0); setShowList(false); }}>
                   {t.name}
                 </li>
               ))}
@@ -100,30 +123,21 @@ export default function OccupationPage() {
         </div>
       )}
 
-      {/* tours cliquables sur la carte */}
+      {/* tours sur la carte */}
       {blueTowers.map((tower) => (
-        <div
-          key={tower.id}
-          className="tower blue"
-          style={{ left: tower.left, top: tower.top }}
-          onClick={() => {
-            setSelectedTower(tower);
-            setTeamIdx(0);
-            setShowList(false);
-          }}
-        >
+        <div key={tower.id} className="tower blue" style={{ left: tower.left, top: tower.top }}
+          onClick={() => { setSelectedTower(tower); setTeamIdx(0); setShowList(false); }}>
           <img src={blueTower} alt={tower.name} />
         </div>
       ))}
 
-      {/* modal tour */}
+      {/* modal */}
       {selectedTower && (
         <div className="overlay" onClick={() => setSelectedTower(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="close-btn" onClick={() => setSelectedTower(null)} aria-label="Fermer">&times;</button>
             <h2>{selectedTower.name}</h2>
 
-            {/* onglets équipes */}
             <div className="team-selector">
               {towerTeams[selectedTower.id].map((_, idx) => (
                 <button key={idx} className={`team-tab ${idx === teamIdx ? "active" : ""}`} onClick={() => setTeamIdx(idx)}>
@@ -135,12 +149,11 @@ export default function OccupationPage() {
               )}
             </div>
 
-            {/* cartes monstres */}
             <div className="cards">
               {towerTeams[selectedTower.id][teamIdx].map((monster, slotIdx) => (
                 <button key={slotIdx} className="card" onClick={() => setSelectInfo({ teamIdx, slotIdx })}>
                   {monster ? (
-                    <img src={monster.startsWith("blob:") ? monster : `http://localhost:5000${monster}`} alt="monstre" />
+                    <img src={monster.startsWith("blob:") ? monster : `${API}${monster}`} alt="monstre" />
                   ) : (
                     "+ Monstre"
                   )}
@@ -151,17 +164,19 @@ export default function OccupationPage() {
         </div>
       )}
 
-      {/* MonsterSelect */}
+      {/* Sélecteur */}
       {selectInfo && (
         <MonsterSelect
           onPick={(filename) => {
             setTowerTeams((prev) => {
-              const copy     = { ...prev };
-              const teams    = [...copy[selectedTower.id]];
-              const monsters = [...teams[selectInfo.teamIdx]];
-              monsters[selectInfo.slotIdx] = filename;
+              const copy      = { ...prev };
+              const teams     = [...copy[selectedTower.id]];
+              const monsters  = [...teams[selectInfo.teamIdx]];
+              monsters[selectInfo.slotIdx] = filename; // `/static/monsters/xyz.png`
               teams[selectInfo.teamIdx]    = monsters;
               copy[selectedTower.id]       = teams;
+              // sauvegarde immédiate
+              saveTeam(selectedTower.id, selectInfo.teamIdx, monsters);
               return copy;
             });
           }}

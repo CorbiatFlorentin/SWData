@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const patchnotesRoutes = require('./routes/patchnotesRoutes');
 const monsterRoutes    = require('./routes/monsterRoutes');
+const teamsRoutes = require('./routes/teamsRoutes');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
 app.use('/api', patchnotesRoutes);
 app.use('/api/monsters', monsterRoutes);
+app.use('/teams', teamsRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));

@@ -26,13 +26,14 @@ jobs:
           cache-dependency-path: |
             frontend/package-lock.json
             package-lock.json     # racine
-
-      - name: Install frontend deps (retry on EINTEGRITY)
+            
+      - name: Install frontend deps (retry + alt registry)
         working-directory: frontend
         run: |
-          npm ci || (echo "Retry after cleaning cache" \
-            && npm cache clean --force \
-            && npm ci)
+         npm ci --registry=https://registry.npmmirror.com \
+         || (npm cache clean --force \
+         && npm ci --registry=https://registry.npmmirror.com)
+          
 
       - name: Lint frontend
         working-directory: frontend

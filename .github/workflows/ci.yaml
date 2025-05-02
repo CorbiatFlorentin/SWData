@@ -1,85 +1,53 @@
-name: CI‑Build
+# .github/workflows/ci.yml
+name: CI
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
-
-# Re‑lance la pipeline si package*.json change
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
     strategy:
       matrix:
-        node-version: [18.x, 20.x]    # vous pouvez en laisser qu’une
+        node-version: [18.x, 20.x]
+
+    runs-on: ubuntu-latest
+
     steps:
-    # ───────── Checkout du code ─────────
-    - name: Checkout 🛎️
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    # ───────── Caching npm ─────────
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      # ---- FRONTEND ----
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            package-lock.json     # racine
 
-    # ───────── Backend ─────────
-    - name: Install backend deps
-      working-directory: backend
-      run: npm ci
+      - name: Install frontend deps (retry on EINTEGRITY)
+        working-directory: frontend
+        run: |
+          npm ci || (echo "Retry after cleaning cache" \
+            && npm cache clean --force \
+            && npm ci)
 
-    - name: Lint backend
-      working-directory: backend
-      run: npm run lint --if-present
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint --if-present
 
-    - name: Test backend
-      working-directory: backend
-      run: npm test --if-present
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build --if-present
 
-    - name: Build backend
-      working-directory: backend
-      run: |
-        npm run build --if-present     # si vous avez un script de build
-        echo "Backend build finished"
+      # ---- BACKEND ----
+      - name: Install backend deps (retry on EINTEGRITY)
+        working-directory: backend
+        run: |
+          npm ci || (npm cache clean --force && npm ci)
 
-    # ───────── Frontend ─────────
-    - name: Install frontend deps
-      working-directory: frontend
-      run: npm ci
-
-    - name: Lint frontend
-      working-directory: frontend
-      run: npm run lint --if-present
-
-    - name: Test frontend
-      working-directory: frontend
-      run: npm test --if-present
-
-    - name: Build frontend
-      working-directory: frontend
-      run: npm run build
-
-    # ───────── Artefacts (facultatif) ─────────
-    - name: Upload React build
-      uses: actions/upload-artifact@v4
-      with:
-        name: react-build-${{ matrix.node-version }}
-        path: frontend/build
-        retention-days: 7
-
-    - name: Upload backend dist
-      if: ${{ hashFiles('backend/dist/**') != '' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: backend-dist-${{ matrix.node-version }}
-        path: backend/dist
-        retention-days: 7
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test --if-present

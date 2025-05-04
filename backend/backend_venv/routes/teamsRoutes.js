@@ -1,11 +1,12 @@
 const router = require("express").Router();
 const db     = require("../config/db-config");
-const { authenticateToken } = require("../middleware/auth");
+const { authenticateToken, authorizeRole } = require("../middleware/auth");
 const { upsertTeam } = require("../utils/teams");
 
 /* GET /teams  → toutes les teams de l'utilisateur connecté */
-router.get("/", authenticateToken, (req, res) => {
-  const uid = req.user.user_id;
+router.get("/", authenticateToken, authorizeRole, (req, res) => {
+  console.log("[/teams] req.user = ", req.user);
+  const uid = req.user_id;
   const sql = `
     SELECT t.team_id, t.tower_id, t.team_idx,
            GROUP_CONCAT(ts.monster_id, ',') AS monsters
@@ -20,17 +21,24 @@ router.get("/", authenticateToken, (req, res) => {
 });
 
 /* POST /teams  → upsert d'une équipe */
-router.post("/", authenticateToken, (req, res) => {
-  const { tower_id, team_idx, monsters } = req.body;   // monsters = [id,id,id]
-  if (!Array.isArray(monsters) || monsters.length !== 3)
-    return res.status(400).json({ error: "array monsters[3] attendu" });
+router.post("/", authenticateToken, authorizeRole, async (req, res) => {
+  try {
+    const { tower_id, team_idx, monsters } = req.body;
+    if (!Array.isArray(monsters) || monsters.length !== 3)
+      return res.status(400).json({ error: "array monsters[3] attendu" });
 
-  upsertTeam({           // helper est async -> on l’attend
-       userId:   req.user.user_id,
-       tower_id, team_idx, monsters
-     })
-       .then(() => res.json({ message: 'team enregistrée' }))
-       .catch((err) => res.status(500).json({ error: err.message }));
+    await upsertTeam(req.app.locals.db, {
+      userId  : req.user_id,
+      tower_id,
+      team_idx,
+      monsters,
     });
+
+    res.json({ message: "team enregistrée" });
+  } catch (err) {
+    console.error("✖ ERREUR /teams :", err);   // <‑‑ log complet (stack)
+    res.status(500).json({ error: "internal error" });
+  }
+});
 
 module.exports = router;

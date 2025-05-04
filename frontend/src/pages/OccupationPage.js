@@ -64,21 +64,45 @@ export default function OccupationPage() {
   }, []);
 
   /* ───────── helper de sauvegarde ───────── */
-  const saveTeam = (towerId, teamIdx, monsters) => {
-    if (!token) return;
-    fetch(`${API}/teams`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        tower_id: towerId,
-        team_idx: teamIdx,
-        monsters: monsters.map((m) => (m ? m.split("/").pop() : null)), // ne stocke que le filename
-      }),
-    }).catch(console.error);
-  };
+/**  ⤵︎  Appelle l’API /teams et envoie : 
+ *      { tower_id, team_idx, monsters:[id|0 , id|0 , id|0] }
+ *      – id : numéro du monstre dans la table monsters
+ *      – 0  : slot vide
+ */
+const idOrZero = (urlOrNull) => {
+  if (!urlOrNull) return 0; 
+  const file  = urlOrNull.split("/").pop();
+  const m = file.match(/_(\d+)(?:_|\.)/);
+  return m ? Number(m[1]) : 0;
+}
+const saveTeam = (towerId, teamIdx, monsters) => {
+  if (!token) return;   
+  
+  const monsterIds = monsters.map(idOrZero);// pas connecté → on ignore
+
+  /* transforme chacune des 3 cases du tableau
+       "/static/monsters/unit_icon_0123_3.png"  →  123
+       null                                    →  0                    
+  const monsterIds = monsters.map((m) => {
+    if (!m) return 0;                        // slot vide
+    const file   = m.split('/').pop();       // unit_icon_0123_3.png
+    const match  = file.match(/_(\d+)_/);    // 0123
+    return match ? Number(match[1]) : 0;
+  });*/
+
+  fetch(`${API}/teams`, {
+    method : 'POST',
+    headers: {
+      'Content-Type' : 'application/json',
+      Authorization  : `Bearer ${token}`,
+    },
+    body   : JSON.stringify({
+      tower_id : towerId,
+      team_idx : teamIdx,
+      monsters : monsterIds,                 // [123, 456, 0]
+    }),
+  }).catch(console.error);
+};
 
   /* ───────── logique util ───────── */
   const hasAnyMonster = (teams) => teams.some((team) => team.some(Boolean));

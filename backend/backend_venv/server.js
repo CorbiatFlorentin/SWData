@@ -10,10 +10,11 @@ const adminRoutes = require('./routes/adminRoutes');
 const patchnotesRoutes = require('./routes/patchnotesRoutes');
 const monsterRoutes    = require('./routes/monsterRoutes');
 const teamsRoutes = require('./routes/teamsRoutes');
-
+const db = require("./config/db-config");
 const app = express();
 
 // Middleware
+app.locals.db = db;
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -21,6 +22,11 @@ app.use(
       '/static/monsters',
       express.static(path.join(__dirname, 'database', 'monsters_icons'))
     );
+
+app.use((err, req, res, _next) =>{
+  console.error("ERREUR API:", err)
+  res.status(500).json({error: err.message});
+});
 
 // Routes
 app.use('/auth', authRoutes);
@@ -32,3 +38,6 @@ app.use('/teams', teamsRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
+
+
+

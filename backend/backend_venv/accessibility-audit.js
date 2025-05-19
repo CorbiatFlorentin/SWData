@@ -1,32 +1,47 @@
-const axe = require('axe-core');
 const puppeteer = require('puppeteer');
 
 (async () => {
+
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  // Go to the page and wait for the DOM to be loaded
-  await page.goto('http://localhost:5000/api/patchnotes', { waitUntil: 'domcontentloaded' });
+  await page.goto('http://localhost:5000/api/patchnotes', {
+    waitUntil: 'domcontentloaded'
+  });
 
-  // Log the page content for debugging
-  const pageContent = await page.content();
-  console.log(pageContent); // Check if the content is loading properly
+  await page.waitForSelector('pre', {
+    timeout: 20000,
+    visible: true
+  });
 
-  // Wait for a different selector or the page itself to load
-  await page.waitForSelector('.articles-container', { timeout: 20000, visible: true });
+  await page.addScriptTag({
+    path: require.resolve('axe-core/axe.min.js')
+  });
 
-  // Inject and run axe-core
-  const results = await page.evaluate(async () => {
+  const résultats = await page.evaluate(async () => {
     return await axe.run({
       runOnly: {
         type: 'tag',
-        values: ['wcag2a', 'wcag2aa'] // Test criteria
+        values: ['wcag2a', 'wcag2aa']
       }
     });
   });
 
-  // Display violations
-  console.log('Detected Errors:', results.violations);
+  if (résultats.violations.length === 0) {
+    console.log('✔ Aucune violation d’accessibilité détectée.');
+  } else {
+    console.log(`${résultats.violations.length} violation(s) d’accessibilité détectée(s) :\n`);
+    résultats.violations.forEach((violation) => {
+      console.log(`Règle : ${violation.id}`);
+      console.log(`Description : ${violation.description}`);
+      console.log(`Documentation : ${violation.helpUrl}`);
+      violation.nodes.forEach((node, i) => {
+        console.log(`  ${i + 1}. Élément : ${node.html}`);
+        console.log(`     Détail de l’échec : ${node.failureSummary}`);
+      });
+      console.log('');
+    });
+  }
 
   await browser.close();
 })();

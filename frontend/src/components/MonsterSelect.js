@@ -1,4 +1,3 @@
-// src/components/MonsterSelect.js
 import React, { useEffect, useState } from "react";
 import "../assets/style/MonsterSelect.css";
 
@@ -36,8 +35,8 @@ export default function MonsterSelect({ onPick, onClose }) {
               key={m.id}
               className="ms-card"
               onClick={() => {
-                onPick(m.img);   // ← envoie tout de suite l’URL /static/monsters/…
-                onClose();       // ← ferme la fenêtre
+                onPick(m.img);   
+                onClose();       
               }}
             >
               <img src={`http://localhost:5000${m.img}`} alt={m.name} />

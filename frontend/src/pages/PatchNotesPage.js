@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import isURL from 'validator/lib/isURL';
+import escape from 'validator/lib/escape'; 
 import '../assets/style/PatchNotes.css';
 
 const PatchNotesPage = () => {
@@ -25,6 +27,11 @@ const PatchNotesPage = () => {
     fetchArticles(); // Appel de la fonction
   }, []);
 
+  function isSafeUrl(url) {
+    
+    return isURL(url, { protocols: ['http','https'], host_whitelist: ['sw.com2us.com'], require_protocol: true });
+  }
+
   return (
     <div className="page-container">
       <p>
@@ -34,16 +41,30 @@ const PatchNotesPage = () => {
 
       <h2>Dernières mises à jour</h2>
       {loading && <p>Chargement des articles...</p>}
-      {error && <p>{error}</p>}
+      {error   && <p className="error">{error}</p>}
+
       <div className="articles-container">
         {articles.length > 0 ? (
-          articles.map((article, index) => (
-            <div key={index} className="article-box">
-              <a href={article.link} target="_blank" rel="noopener noreferrer">
-                {article.title}
-              </a>
-            </div>
-          ))
+          articles.map((article, index) => {
+            const safe = isSafeUrl(article.link);
+             const title = escape(article.title);
+
+            return (
+              <div key={index} className="article-box" lang='fr'>
+                {safe ? (
+                  <a
+                    href={article.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {article.title}
+                  </a>
+                ) : (
+                  <span>{title} (lien invalide)</span>
+                )}
+              </div>
+            );
+          })
         ) : (
           !loading && <p>Aucun article trouvé.</p>
         )}

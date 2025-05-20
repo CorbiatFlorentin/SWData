@@ -45,11 +45,10 @@ npm start
 ```
 
 ## 🗂 Fonctionnalités principales
-✔️ Gestion des équipes et des stratégies de défense  
-✔️ Suivi des attaques et coordination des joueurs  
+✔️ Gestion des équipes et des stratégies de défense    
 ✔️ Base de données locale avec SQLite3 pour stocker les informations  
 ✔️ Interface web intuitive avec React  
-✔️ Possibilité d'intégrer des scripts Python pour des analyses avancées  
+✔️ Scrapping des dernières actualités sur le jeu  
 
 ## 🎯 Roadmap (améliorations à venir)
 - 🔜 Statistiques avancées sur les performances des joueurs  

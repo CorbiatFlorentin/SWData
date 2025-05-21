@@ -89,7 +89,7 @@ router.post('/login', (req, res) => {
       [now.toISOString(), user.id]
     );
 
-    // 4️⃣ Générer et renvoyer le JWT
+    
     const token = generateToken(user);
     res.status(200).json({ message: 'Connexion réussie', token });
   });

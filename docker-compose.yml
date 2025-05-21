@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend/backend_venv
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/backend_venv:/app
+      - ./backend/backend_venv/mydatabase.db:/app/mydatabase.db
+    environment:
+      - JWT_SECRET=dev-secret
+    restart: unless-stopped

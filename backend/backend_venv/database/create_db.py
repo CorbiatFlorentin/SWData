@@ -10,13 +10,7 @@ def table_exists(cur, name):
     return cur.fetchone() is not None
 
 
-def clear_tables(cur, names):
-    cur.execute("PRAGMA foreign_keys = ON;")
-    for tbl in names:
-        if table_exists(cur, tbl):
-            cur.execute(f"DELETE FROM {tbl};")
-            print(f"  – vidée : {tbl}")
-    cur.execute("PRAGMA foreign_keys = ON;")
+
 
 
 ################################################################################
@@ -141,21 +135,7 @@ CREATE TABLE IF NOT EXISTS team_slots (
 
 # ─────────────────────────── vidage contrôlé ──────────────────────────
 print("🧹 vidage des tables examples / ref …")
-clear_tables(
-    cur,
-    [
-        "team_slots",
-        "teams",
-        "towers",
-        "users",
-        "elements",
-        "archetypes",
-        "monsters",
-        "skills",
-        "monster_skills",
-        "leader_skills",
-    ],
-)
+
 
 # ─────────────────────────── seeds de base ────────────────────────────
 cur.executemany("INSERT OR IGNORE INTO elements (name) VALUES (?)",

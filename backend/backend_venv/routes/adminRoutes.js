@@ -4,7 +4,7 @@ const { authenticateToken, authorizeRole } = require('../middleware/auth'); // a
 
 const router = express.Router();
 
-// 📥 Récupération de tous les utilisateurs (admin uniquement)
+// Récupération de tous les utilisateurs par l'admin
 router.get('/users', authenticateToken, authorizeRole('admin'), (req, res) => {
     const query = `
         SELECT user_id, nom, prenom, pseudo, email, role, created_at, last_activity 

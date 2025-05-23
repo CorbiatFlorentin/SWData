@@ -56,8 +56,7 @@ npm start
 - 🔜 Gestion des permissions et rôles au sein de la guilde  
 
 ## 🛠 Outils recommandés
-- **DBeaver** pour explorer et gérer la base de données SQLite3  
-- **Postman** pour tester les API backend  
+- **DBeaver** pour explorer et gérer la base de données SQLite3   
 
 ## 🤝 Contributions
 Les contributions sont les bienvenues ! N'hésite pas à proposer des améliorations via des issues ou des pull requests.  

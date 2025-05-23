@@ -29,7 +29,7 @@ export default function OccupationPage() {
   const navigate      = useNavigate();
   const { user }      = useUser();
   const token         = localStorage.getItem("token");
-
+  
   /* ───────── Auth guard ───────── */
   useEffect(() => {
     if (!user) navigate("/register");
@@ -123,34 +123,34 @@ const saveTeam = (towerId, teamIdx, monsters) => {
   };
 
   /* ───────── render ───────── */
-  return (
+   return (
     <div className="occupation-container">
       {/* bouton flottant */}
-      <button className="team-list-toggle" onClick={() => setShowList((p) => !p)}>
+      <button
+        className="team-list-toggle"
+        onClick={() => setShowList(p => !p)}
+      >
         Mes teams ({filledTowers.length})
       </button>
 
       {showList && (
         <div className="team-list-panel">
-          <h3>Compositions enregistrées</h3>
-          {filledTowers.length === 0 ? (
-            <p>Aucune pour l'instant</p>
-          ) : (
-            <ul>
-              {filledTowers.map((t) => (
-                <li key={t.id} onClick={() => { setSelectedTower(t); setTeamIdx(0); setShowList(false); }}>
-                  {t.name}
-                </li>
-              ))}
-            </ul>
-          )}
+          {/* … ton panel liste d’équipes … */}
         </div>
       )}
 
       {/* tours sur la carte */}
-      {blueTowers.map((tower) => (
-        <div key={tower.id} className="tower blue" style={{ left: tower.left, top: tower.top }}
-          onClick={() => { setSelectedTower(tower); setTeamIdx(0); setShowList(false); }}>
+      {blueTowers.map(tower => (
+        <div
+          key={tower.id}
+          className="tower blue"
+          style={{ left: tower.left, top: tower.top }}
+          onClick={() => {
+            setSelectedTower(tower);
+            setTeamIdx(0);
+            setShowList(false);
+          }}
+        >
           <img src={blueTower} alt={tower.name} />
         </div>
       ))}
@@ -158,55 +158,88 @@ const saveTeam = (towerId, teamIdx, monsters) => {
       {/* modal */}
       {selectedTower && (
         <div className="overlay" onClick={() => setSelectedTower(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setSelectedTower(null)} aria-label="Fermer">&times;</button>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <button
+              className="close-btn"
+              onClick={() => setSelectedTower(null)}
+              aria-label="Fermer"
+            >
+              &times;
+            </button>
             <h2>{selectedTower.name}</h2>
 
             <div className="team-selector">
               {towerTeams[selectedTower.id].map((_, idx) => (
-                <button key={idx} className={`team-tab ${idx === teamIdx ? "active" : ""}`} onClick={() => setTeamIdx(idx)}>
+                <button
+                  key={idx}
+                  className={`team-tab ${idx === teamIdx ? "active" : ""}`}
+                  onClick={() => setTeamIdx(idx)}
+                >
                   Équipe {idx + 1}
                 </button>
               ))}
               {towerTeams[selectedTower.id].length < MAX_TEAMS && (
-                <button className="add-team" onClick={addTeam}>+ Équipe</button>
+                <button className="add-team" onClick={addTeam}>
+                  + Équipe
+                </button>
               )}
             </div>
 
             <div className="cards">
-              {towerTeams[selectedTower.id][teamIdx].map((monster, slotIdx) => (
-                <button key={slotIdx} className="card" onClick={() => setSelectInfo({ teamIdx, slotIdx })}>
-                  {monster ? (
-                    <img src={monster.startsWith("blob:") ? monster : `${API}${monster}`} alt="monstre" />
-                  ) : (
-                    "+ Monstre"
-                  )}
-                </button>
-              ))}
+              {towerTeams[selectedTower.id][teamIdx].map(
+                (monster, slotIdx) => (
+                  <button
+                    key={slotIdx}
+                    className="card"
+                    onClick={() => {
+                      console.log(
+                        "ouvrir selecteur pour team",
+                        teamIdx,
+                        "slot",
+                        slotIdx
+                      );
+                      setSelectInfo({ teamIdx, slotIdx });
+                    }}
+                  >
+                    {monster ? (
+                      <img
+                        src={
+                          monster.startsWith("blob:")
+                            ? monster
+                            : `${API}${monster}`
+                        }
+                        alt="monstre"
+                      />
+                    ) : (
+                      "+ Monstre"
+                    )}
+                  </button>
+                )
+              )}
             </div>
           </div>
         </div>
       )}
 
-      {/* Sélecteur */}
-      {selectInfo && (
-        <MonsterSelect
-          onPick={(filename) => {
-            setTowerTeams((prev) => {
-              const copy      = { ...prev };
-              const teams     = [...copy[selectedTower.id]];
-              const monsters  = [...teams[selectInfo.teamIdx]];
-              monsters[selectInfo.slotIdx] = filename; // `/static/monsters/xyz.png`
-              teams[selectInfo.teamIdx]    = monsters;
-              copy[selectedTower.id]       = teams;
-              // sauvegarde immédiate
-              saveTeam(selectedTower.id, selectInfo.teamIdx, monsters);
-              return copy;
-            });
-          }}
-          onClose={() => setSelectInfo(null)}
-        />
-      )}
+      {/* MonsterSelect MONTE TOUJOURS, mais affiché seulement si visible */}
+      <MonsterSelect
+        visible={!!selectInfo}
+        onPick={filename => {
+          console.log("choix du monstre", filename);
+          setTowerTeams(prev => {
+            const copy = { ...prev };
+            const teams = [...copy[selectedTower.id]];
+            const monsters = [...teams[selectInfo.teamIdx]];
+            monsters[selectInfo.slotIdx] = filename;
+            teams[selectInfo.teamIdx] = monsters;
+            copy[selectedTower.id] = teams;
+            saveTeam(selectedTower.id, selectInfo.teamIdx, monsters);
+            return copy;
+          });
+          setSelectInfo(null);
+        }}
+        onClose={() => setSelectInfo(null)}
+      />
     </div>
   );
 }

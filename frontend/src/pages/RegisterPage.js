@@ -40,7 +40,7 @@ const Register = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registerData)
       });
-
+       console.log('URL fetch login →', `http://localhost:5000/auth/login`);
       const data = await response.json();
       if (response.ok) {
         alert('Inscription réussie');

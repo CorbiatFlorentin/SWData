@@ -1,26 +1,27 @@
 // middleware/auth.js
-const { verifyToken } = require('../config/jwt-config');
-
+const { verifyToken } = require("../config/jwt-config");
 
 function authenticateToken(req, res, next) {
-  const authHdr = req.headers['authorization'] || '';
-  const token   = authHdr.split(' ')[1];       
-  if (!token) return res.sendStatus(401);       
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Token manquant" });
 
   try {
-    const decoded = verifyToken(token);         
-    req.user = decoded;                         
+    const payload = verifyToken(token);
+    req.user = { id: payload.id, pseudo: payload.pseudo, role: payload.role };
     next();
   } catch (err) {
-    console.error('JWT error →', err.message);  
-    return res.sendStatus(403);                 
+    const code = err.name === "TokenExpiredError" ? 401 : 401;
+    return res.status(code).json({ error: err.name === "TokenExpiredError"
+      ? "Session expirée, veuillez vous reconnecter."
+      : "Token invalide."
+    });
   }
 }
 
 /**
  * Middleware de contrôle d’accès par rôle.
- * Exemple : app.get('/admin', authorizeRole('admin'), handler)
- */
+*/
 function authorizeRole(role) {
   return (req, res, next) => {
     if (!req.user || req.user.role !== role) {

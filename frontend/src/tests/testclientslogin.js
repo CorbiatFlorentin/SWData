@@ -16,7 +16,7 @@ fetch('http://localhost:5000/register', {
   .then((data) => {
     console.log('Inscription:', data);
   })
-  .catch((err) => console.error('Erreur:', err));
+  .catch((err) => console.error('Error:', err));
 
 // Connexion
 fetch('http://localhost:5000/login', {
@@ -29,6 +29,6 @@ fetch('http://localhost:5000/login', {
 })
   .then((res) => res.json())
   .then((data) => {
-    console.log('Connexion:', data);
+    console.log('Connection:', data);
   })
   .catch((err) => console.error('Erreur:', err));

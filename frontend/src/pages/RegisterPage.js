@@ -43,14 +43,14 @@ const Register = () => {
        console.log('URL fetch login →', `http://localhost:5000/auth/login`);
       const data = await response.json();
       if (response.ok) {
-        alert('Inscription réussie');
+        alert('Inscription successfull');
         setUser({ pseudo: registerData.pseudo }); 
         localStorage.setItem('token', data.token);
       } else {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Erreur lors de l\'inscription:', error);
+      console.error('Error during inscription:', error);
     }
   };
 
@@ -70,7 +70,7 @@ const Register = () => {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Erreur lors de la connexion:', error);
+      console.error('Error during login:', error);
     }
   };
 
@@ -85,12 +85,12 @@ const Register = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert('Un email de réinitialisation a été envoyé');
+        alert('An email has been sent');
       } else {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Erreur lors de la réinitialisation:', error);
+      console.error('Error during delete', error);
     }
   };
 
@@ -117,7 +117,7 @@ const Register = () => {
           alert(data.error);
         }
       } catch (error) {
-        console.error('Erreur lors de la suppression du compte:', error);
+        console.error('Error during account suppression:', error);
       }
     }
   };

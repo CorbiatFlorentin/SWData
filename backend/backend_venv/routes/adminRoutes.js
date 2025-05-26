@@ -1,10 +1,10 @@
 const express = require('express');
 const db = require('../config/db-config');
-const { authenticateToken, authorizeRole } = require('../middleware/auth'); // authorizeRole n'est pas utilisé ici
+const { authenticateToken, authorizeRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Récupération de tous les utilisateurs par l'admin
+// Admin get all users 
 router.get('/users', authenticateToken, authorizeRole('admin'), (req, res) => {
     const query = `
         SELECT user_id, nom, prenom, pseudo, email, role, created_at, last_activity 
@@ -12,56 +12,56 @@ router.get('/users', authenticateToken, authorizeRole('admin'), (req, res) => {
     `;
     db.all(query, [], (err, rows) => {
         if (err) {
-            return res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
+            return res.status(500).json({ error: 'Error while getting users' });
         }
         res.json(rows);
     });
 });
 
-// 🗑 Suppression d'un utilisateur par user_id
+
 router.delete('/users/:id', authenticateToken, (req, res) => {
     if (req.user.role !== 'admin') {
-        return res.status(403).json({ error: 'Accès refusé. Admin uniquement.' });
+        return res.status(403).json({ error: 'Access denied. Admin only.' });
     }
 
     const userId = req.params.id;
 
     db.run('DELETE FROM users WHERE user_id = ?', [userId], function (err) {
         if (err) {
-            return res.status(500).json({ error: 'Erreur lors de la suppression.' });
+            return res.status(500).json({ error: 'Error while suppressing.' });
         }
 
         if (this.changes === 0) {
-            return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+            return res.status(404).json({ error: 'User not found .' });
         }
 
-        res.json({ message: `Utilisateur ID ${userId} supprimé.` });
+        res.json({ message: `Usur ID ${userId} deletd.` });
     });
 });
 
-// 🔁 Mise à jour du rôle d'un utilisateur
+// 🔁 User's role update
 router.put('/users/:id/role', authenticateToken, (req, res) => {
     if (req.user.role !== 'admin') {
-        return res.status(403).json({ error: 'Accès refusé. Admin uniquement.' });
+        return res.status(403).json({ error: 'Access refused. Admin only.' });
     }
 
     const userId = req.params.id;
     const { role } = req.body;
 
     if (!['admin', 'user'].includes(role)) {
-        return res.status(400).json({ error: 'Rôle invalide. Utilisez "admin" ou "user".' });
+        return res.status(400).json({ error: 'Invalid role. Use "admin" ou "user".' });
     }
 
     db.run('UPDATE users SET role = ? WHERE user_id = ?', [role, userId], function (err) {
         if (err) {
-            return res.status(500).json({ error: 'Erreur lors de la mise à jour du rôle.' });
+            return res.status(500).json({ error: 'Error while update role.' });
         }
 
         if (this.changes === 0) {
-            return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+            return res.status(404).json({ error: 'User not found.' });
         }
 
-        res.json({ message: `Rôle de l'utilisateur ${userId} mis à jour en '${role}'.` });
+        res.json({ message: `User's role  ${userId} update in  '${role}'.` });
     });
 });
 

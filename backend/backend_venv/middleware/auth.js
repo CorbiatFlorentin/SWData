@@ -1,10 +1,9 @@
-// middleware/auth.js
 const { verifyToken } = require("../config/jwt-config");
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization || "";
   const token = authHeader.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Token manquant" });
+  if (!token) return res.status(401).json({ error: "Token missing" });
 
   try {
     const payload = verifyToken(token);
@@ -13,15 +12,12 @@ function authenticateToken(req, res, next) {
   } catch (err) {
     const code = err.name === "TokenExpiredError" ? 401 : 401;
     return res.status(code).json({ error: err.name === "TokenExpiredError"
-      ? "Session expirée, veuillez vous reconnecter."
-      : "Token invalide."
+      ? "Session expired, pls reconnect."
+      : "Token invalid."
     });
   }
 }
 
-/**
- * Middleware de contrôle d’accès par rôle.
-*/
 function authorizeRole(role) {
   return (req, res, next) => {
     if (!req.user || req.user.role !== role) {

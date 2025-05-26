@@ -22,8 +22,8 @@ router.get('/patchnotes', async (req, res) => {
     await browser.close();
     res.json(patchNotes);
   } catch (err) {
-    console.error('Erreur Puppeteer:', err.message);
-    res.status(500).json({ error: 'Erreur lors du scraping' });
+    console.error('Error Puppeteer:', err.message);
+    res.status(500).json({ error: 'Error while scrapping' });
   }
 });
 

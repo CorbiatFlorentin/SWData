@@ -1,10 +1,8 @@
-// routes/teamRoutes.js
 const router = require("express").Router();
 const db     = require("../config/db-config");
 const { authenticateToken, authorizeRole } = require("../middleware/auth");
 const { upsertTeam } = require("../utils/teams");
 
-// GET /teams → toutes les teams de l'utilisateur connecté
 router.get(
   "/",
   authenticateToken,
@@ -21,7 +19,7 @@ router.get(
     `;
     db.all(sql, [uid], (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
-      // transforme "1,2,0" → [1,2,0]
+      // transform "1,2,0" → [1,2,0]
       const formatted = rows.map(r => ({
         team_id:  r.team_id,
         tower_id: r.tower_id,
@@ -35,7 +33,6 @@ router.get(
   }
 );
 
-// POST /teams → upsert d'une équipe
 router.post(
   "/",
   authenticateToken,
@@ -44,7 +41,7 @@ router.post(
     try {
       const { tower_id, team_idx, monsters } = req.body;
       if (!Array.isArray(monsters) || monsters.length !== 3) {
-        return res.status(400).json({ error: "array monsters[3] attendu" });
+        return res.status(400).json({ error: "array monsters[3] expected" });
       }
 
       const userId = req.user.id;
@@ -55,9 +52,9 @@ router.post(
         monsters,
       });
 
-      res.json({ message: "Team enregistrée" });
+      res.json({ message: "Team saved" });
     } catch (err) {
-      console.error("✖ ERREUR /teams :", err);
+      console.error("✖ ERROR /teams :", err);
       res.status(500).json({ error: err.message });
     }
   }

@@ -1,12 +1,12 @@
-// utils/teams.js
+
 /**
- * Upsert d'une "team" : si elle existe on met à jour ses slots, sinon on la crée.
+ * Upsert of a team
  * @param {sqlite3.Database} db 
  * @param {{ userId: number, tower_id: number, team_idx: number, monsters: number[] }} params 
  */
 function upsertTeam(db, { userId, tower_id, team_idx, monsters }) {
   return new Promise((resolve, reject) => {
-    // 1. Cherche si la team existe déjà
+    // 1. Search if the team already exist
     const findSql = `
       SELECT team_id
       FROM teams
@@ -16,14 +16,14 @@ function upsertTeam(db, { userId, tower_id, team_idx, monsters }) {
       if (err) return reject(err);
 
       const insertSlots = (teamId) => {
-        // Supprime d'abord les anciens slots
+        // delete old files
         db.run(
           `DELETE FROM team_slots WHERE team_id = ?`,
           [teamId],
           (delErr) => {
             if (delErr) return reject(delErr);
 
-            // Insert les nouveaux slots
+            // Insert new slots
             const stmt = db.prepare(`
               INSERT INTO team_slots (team_id, slot_idx, monster_id)
               VALUES (?, ?, ?)
@@ -40,11 +40,11 @@ function upsertTeam(db, { userId, tower_id, team_idx, monsters }) {
       };
 
       if (row) {
-        // 2a. Si existante, on met à jour ses slots
+        // 2a. If exist update 
         return insertSlots(row.team_id);
       }
 
-      // 2b. Sinon, on crée la team puis ses slots
+      // 2b. Else create 
       const createSql = `
         INSERT INTO teams (user_id, tower_id, team_idx)
         VALUES (?, ?, ?)

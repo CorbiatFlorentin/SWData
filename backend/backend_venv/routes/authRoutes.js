@@ -6,11 +6,11 @@ const { generateToken } = require('../config/jwt-config');
 
 const router = express.Router();
 
-// Inscription (register)
+// Register
 router.post('/register', async (req, res) => {
   const { nom, prenom, pseudo, email, mot_de_passe, role = 'user' } = req.body;
   if (!nom || !prenom || !pseudo || !email || !mot_de_passe) {
-    return res.status(400).json({ error: 'Tous les champs sont requis' });
+    return res.status(400).json({ error: 'All fields require' });
   }
 
   try {
@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
       function (err) {
         if (err) {
           if (err.message.includes('UNIQUE constraint failed')) {
-            return res.status(400).json({ error: "L'email est déjà utilisé" });
+            return res.status(400).json({ error: "mail already used" });
           }
           return res.status(500).json({ error: err.message });
         }
@@ -37,21 +37,21 @@ router.post('/register', async (req, res) => {
           role
         });
         res.status(201).json({
-          message: 'Utilisateur créé avec succès',
+          message: 'User created with success',
           token
         });
       }
     );
   } catch (err) {
-    res.status(500).json({ error: 'Erreur serveur lors du hash du mot de passe' });
+    res.status(500).json({ error: 'Servor error with password' });
   }
 });
 
-// Connexion (login)
+// Login
 router.post('/login', (req, res) => {
   const { email, mot_de_passe } = req.body;
   if (!email || !mot_de_passe) {
-    return res.status(400).json({ error: 'Tous les champs sont requis' });
+    return res.status(400).json({ error: 'All fields require' });
   }
 
   db.get(
@@ -59,17 +59,17 @@ router.post('/login', (req, res) => {
     [email],
     async (err, user) => {
       if (err) {
-        return res.status(500).json({ error: 'Erreur serveur' });
+        return res.status(500).json({ error: 'Servor error' });
       }
       if (!user) {
-        return res.status(404).json({ error: 'Utilisateur non trouvé' });
+        return res.status(404).json({ error: 'User not found' });
       }
 
       const now = new Date();
       if (user.locked_until && new Date(user.locked_until) > now) {
         return res
           .status(423)
-          .json({ error: 'Compte temporairement verrouillé. Réessaie plus tard.' });
+          .json({ error: 'Accoutn temporary lock, try later' });
       }
 
       const isValid = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
@@ -86,10 +86,9 @@ router.post('/login', (req, res) => {
           `UPDATE users SET login_attempts = ?, locked_until = ? WHERE user_id = ?`,
           [attempts, lockUntil, user.user_id]
         );
-        return res.status(401).json({ error: 'Mot de passe incorrect' });
+        return res.status(401).json({ error: 'password incorect' });
       }
 
-      // reset des compteurs
       db.run(
         `UPDATE users SET login_attempts = 0, locked_until = NULL, last_activity = ? WHERE user_id = ?`,
         [now.toISOString(), user.user_id]
@@ -101,16 +100,14 @@ router.post('/login', (req, res) => {
         email: user.email,
         role: user.role
       });
-      res.status(200).json({ message: 'Connexion réussie', token });
+      res.status(200).json({ message: 'Connection success', token });
     }
   );
 });
 
-// Réinitialisation de mot de passe
 router.post('/reset-password', (req, res) => {
   const { email } = req.body;
-  // TODO : implémenter envoi de mail
-  res.json({ message: 'Email de réinitialisation envoyé' });
+  res.json({ message: 'email password change send' });
 });
 
 module.exports = router;

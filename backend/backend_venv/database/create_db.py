@@ -15,12 +15,11 @@ def table_exists(cur, name):
 
 ################################################################################
 conn = sqlite3.connect(DB_PATH)
-print("✅ connexion SQLite OK")
+print("✅ connection SQLite OK")
 cur = conn.cursor()
 
-print("🛠  création / vérification des tables …")
+print("  creation / table's verification …")
 
-# ─────────────────────────── référentiels ────────────────────────────
 cur.executescript(
     """
 CREATE TABLE IF NOT EXISTS elements (
@@ -104,13 +103,13 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 
-/* Référentiel tours */
+/* Tower model */
 CREATE TABLE IF NOT EXISTS towers (
   tower_id INTEGER PRIMARY KEY,
   name     TEXT NOT NULL
 );
 
-/* Teams (une par user × tour × index) */
+/* Teams  */
 CREATE TABLE IF NOT EXISTS teams (
   team_id   INTEGER PRIMARY KEY AUTOINCREMENT,
   tower_id  INTEGER NOT NULL,
@@ -121,7 +120,7 @@ CREATE TABLE IF NOT EXISTS teams (
   UNIQUE (user_id, tower_id, team_idx)
 );
 
-/* Slots (3 monstres max) */
+/* Slots (3 monsters max) */
 CREATE TABLE IF NOT EXISTS team_slots (
   team_id    INTEGER,
   slot_idx   INTEGER,                      
@@ -133,11 +132,9 @@ CREATE TABLE IF NOT EXISTS team_slots (
 """
 )
 
-# ─────────────────────────── vidage contrôlé ──────────────────────────
-print("🧹 vidage des tables examples / ref …")
+print(" cleaning table and schemes ...")
 
 
-# ─────────────────────────── seeds de base ────────────────────────────
 cur.executemany("INSERT OR IGNORE INTO elements (name) VALUES (?)",
                 [("Fire",), ("Water",), ("Wind",), ("Light",), ("Dark",)])
 
@@ -150,6 +147,6 @@ cur.executemany(
 )
 
 conn.commit()
-print("✅ schéma & seeds OK")
+print("✅ schema & seeds OK")
 conn.close()
-print("🔒 connexion fermée")
+print("🔒 connection close")

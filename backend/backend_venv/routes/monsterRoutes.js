@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 
     const totalAvantFiltrage = raws.length;
 
-    /** Memo pour éviter les doublons  */
+    /** Dupe killer  */
     const seenNames = new Set();
 
     const monsters = raws.reduce((acc, m) => {
@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
       return acc;
     }, []);
 
-    console.log(`[GET /api/monsters] avant : ${totalAvantFiltrage} — après : ${monsters.length}`);
+    console.log(`[GET /api/monsters] before : ${totalAvantFiltrage} — after : ${monsters.length}`);
 
     res.json(monsters);
   } catch (err) {

@@ -16,13 +16,13 @@ const db              = require('./config/db-config');
 
 const app = express();
 
-// Limiteur de connexion sur /auth/login
+// Connection limitator
 const loginLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 5,
   handler: (_req, res) => {
     res.status(429).json({
-      error: 'Trop de tentatives de connexion. Réessaie dans une minute.'
+      error: 'Too many try to log, try later'
     });
   }
 });
@@ -37,10 +37,9 @@ app.use(
   express.static(path.join(__dirname, 'database', 'monsters_icons'))
 );
 
-// Appliquer le rate limiter uniquement sur /auth/login
 app.use('/auth/login', loginLimiter);
 
-// Montage des routes
+//  routes
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
@@ -48,11 +47,10 @@ app.use('/api', patchnotesRoutes);
 app.use('/api/monsters', monsterRoutes);
 app.use('/teams', teamsRoutes);
 
-// Middleware de gestion globale des erreurs (en dernier)
 app.use((err, _req, res, _next) => {
-  console.error('ERREUR API:', err);
+  console.error('ERROR API:', err);
   res.status(500).json({ error: err.message });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
+app.listen(PORT, () => console.log(`Server start on port ${PORT}`));

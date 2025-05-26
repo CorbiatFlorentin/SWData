@@ -1,20 +1,20 @@
-# Utilise une image officielle Node.js
+# Node img
 FROM node:18
 
-# Dossier de travail dans le conteneur
+# Dir that has the app 
 WORKDIR /app
 
-# Copie les fichiers de dépendances
+# Copy dependancies's files
 COPY package*.json ./
 
-# Installation des dépendances
+# Install dependancies
 RUN npm install
 
-# Copie tous les fichiers de l'app
+# Copy all app's files
 COPY . .
 
-# Port exposé
+# Port exposed
 EXPOSE 3000
 
-# Commande de démarrage
+# Start command 
 CMD ["node", "server.js"]

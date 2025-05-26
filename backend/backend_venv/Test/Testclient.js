@@ -20,20 +20,19 @@ async function testerEndpoint(path, payload) {
     if (contentType.includes('application/json')) {
       try {
         const data = JSON.parse(text);
-        console.log('✅ Réponse JSON parsée :', data);
+        console.log('✅ JSON Answer:', data);
       } catch (err) {
-        console.error('❌ Erreur de parsing JSON :', err.message);
+        console.error('❌ Error  parsing JSON :', err.message);
       }
     } else {
-      console.error('❌ Réponse non JSON');
+      console.error('❌ Response non JSON');
     }
   } catch (err) {
-    console.error('❌ Erreur requête/fetch :', err.message);
+    console.error('❌ Error request/fetch :', err.message);
   }
 }
 
 (async () => {
-  // 1. Inscription sur /auth/register
   await testerEndpoint('/auth/register', {
     nom: 'John',
     prenom: 'Doe1',
@@ -42,7 +41,6 @@ async function testerEndpoint(path, payload) {
     mot_de_passe: 'password123',
   });
 
-  // 2. Connexion sur /auth/login
   await testerEndpoint('/auth/login', {
     email: 'john.doe1@example.com',
     mot_de_passe: 'password123',

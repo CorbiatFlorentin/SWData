@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Créer le contexte utilisateur
+// Créer le contexte User
 const UserContext = createContext();
 
-// Fournir le contexte utilisateur
+// Fournir le contexte User
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setUser({ pseudo: 'Utilisateur' }); // À adapter avec un vrai appel API
+      setUser({ pseudo: 'User' }); // À adapter avec un vrai appel API
     }
   }, []);
 

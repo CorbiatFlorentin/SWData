@@ -13,7 +13,7 @@ const Navbar = () => {
 
   // Gérer l'affichage du menu
   const handleMouseEnter = () => {
-    if (timeoutId) clearTimeout(timeoutId); // Annule le timeout si l'utilisateur revient
+    if (timeoutId) clearTimeout(timeoutId); // Annule le timeout si l'User revient
     setShowMenu(true);
   };
 

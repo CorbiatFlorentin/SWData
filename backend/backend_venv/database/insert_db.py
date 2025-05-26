@@ -4,33 +4,33 @@ import os
 import bcrypt
 from datetime import datetime, timedelta
 
-# Définition des fichiers
+
 db_name = 'mydatabase.db'
 json_file = 'fusion_database/bestiary.json'
 
-# Vérification de l'existence des fichiers
-if not os.path.isfile(db_name):
-    raise FileNotFoundError(f"La base de données '{os.path.abspath(db_name)}' est introuvable.")
-if not os.path.isfile(json_file):
-    raise FileNotFoundError(f"Le fichier JSON '{os.path.abspath(json_file)}' est introuvable.")
 
-# Connexion à la base de données
-print(f"📂 Connexion à la base de données : {os.path.abspath(db_name)}")
+if not os.path.isfile(db_name):
+    raise FileNotFoundError(f"database '{os.path.abspath(db_name)}' is not found .")
+if not os.path.isfile(json_file):
+    raise FileNotFoundError(f"JSON's file  '{os.path.abspath(json_file)}' is not found.")
+
+
+print(f"📂 database connection : {os.path.abspath(db_name)}")
 conn = sqlite3.connect(db_name)
 cursor = conn.cursor()
 
 try:
     conn.execute("PRAGMA foreign_keys = OFF;")
-    print("🔑 Clés étrangères activées.")
+    print("🔑FK activated.")
 
-    print(f"🗕️ Chargement des données depuis {json_file}")
+    print(f"🗕️ Loading data from {json_file}")
     with open(json_file, 'r', encoding='utf-8') as f:
         monsters_data = json.load(f)
 
     element_map = {"Fire": 1, "Water": 2, "Wind": 3, "Light": 4, "Dark": 5}
     archetype_map = {"Attack": 1, "Defense": 2, "Support": 3, "HP": 4}
 
-    # Pré-insertion des leader_skills pour éviter les erreurs FK
+    # first insert of lead-skill for no conflict with FK
     for monster in monsters_data:
         if monster["leader_skill"]:
             leader = monster["leader_skill"]
@@ -39,7 +39,7 @@ try:
             VALUES (?, ?, ?, ?, ?)
             ''', (leader["id"], leader["attribute"], leader["amount"], leader["area"], leader["element"]))
 
-    # Insertion des monstres et compétences
+    # Insert of skills and monsters
     for monster in monsters_data:
         monster_id = monster["id"]
         name = monster["name"]
@@ -90,7 +90,6 @@ try:
             awakens_from, awakens_to
         ))
 
-        # Insertion des compétences liées
         for skill_id in monster["skills"]:
             cursor.execute('INSERT OR IGNORE INTO skills (id) VALUES (?)', (skill_id,))
             cursor.execute('INSERT OR IGNORE INTO monster_skills (monster_id, skill_id) VALUES (?, ?)', (monster_id, skill_id))
@@ -106,27 +105,27 @@ try:
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ''', ("Admin", "Master", "AdminUser", admin_email, hashed_pw, "admin", now, now))
 
-    print("\n👤 Administrateur ajouté avec succès.")
+    print("\n👤 Admin add with success.")
 
     # Suppression des comptes inactifs (RGPD)
     def delete_old_users():
         limit_date = datetime.now() - timedelta(days=3*365)
         cursor.execute("DELETE FROM users WHERE last_activity < ?", (limit_date,))
-        print("🗑️ Comptes inactifs supprimés.")
+        print("🗑️ Account deleted with succes.")
 
     delete_old_users()
 
     conn.commit()
-    print("\n🚀 Toutes les données ont été insérées avec succès.")
+    print("\n🚀 All data have been insert with success.")
 
     cursor.execute("SELECT user_id, email, role, created_at, last_activity FROM users;")
     for row in cursor.fetchall():
         print(row)
 
 except sqlite3.Error as e:
-    print(f"❌ Erreur globale : {e}")
+    print(f"❌ Error global : {e}")
 
 finally:
     if conn:
         conn.close()
-        print("🔐 Connexion fermée.")
+        print("🔐 Connexion close.")

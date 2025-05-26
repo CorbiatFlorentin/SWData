@@ -23,7 +23,7 @@ const AdminPage = () => {
             })
             .then((data) => setUsers(data))
             .catch((err) => {
-                console.error("Erreur chargement users:", err);
+                console.error("Error users loading:", err);
                 navigate("/login");
             })
             .finally(() => setLoading(false));
@@ -31,7 +31,7 @@ const AdminPage = () => {
 
     const handleDeleteUser = async (id) => {
         const token = localStorage.getItem("token");
-        if (!window.confirm("Supprimer cet utilisateur ?")) return;
+        if (!window.confirm("Supprimer cet User ?")) return;
 
         try {
             const res = await fetch(`http://localhost:5000/admin/users/${id}`, {
@@ -49,7 +49,7 @@ const AdminPage = () => {
                 alert(result.error);
             }
         } catch (err) {
-            console.error("Erreur suppression:", err);
+            console.error("Error delete:", err);
         }
     };
 
@@ -76,7 +76,7 @@ const AdminPage = () => {
                 alert(result.error);
             }
         } catch (err) {
-            console.error("Erreur changement de rôle:", err);
+            console.error("Error role update:", err);
         }
     };
 
@@ -85,7 +85,7 @@ const AdminPage = () => {
             <h1>Tableau de bord Admin</h1>
             <StatsWidget />
             {loading ? (
-                <p>Chargement des utilisateurs...</p>
+                <p>Chargement des Users...</p>
             ) : (
                 <UserTable users={users} onDelete={handleDeleteUser} onRoleChange={handleChangeRole} />
             )}

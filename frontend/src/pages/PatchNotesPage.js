@@ -5,26 +5,26 @@ import escape from 'validator/lib/escape';
 import '../assets/style/PatchNotes.css';
 
 const PatchNotesPage = () => {
-  const [articles, setArticles] = useState([]); // Stocker les articles récupérés
-  const [loading, setLoading] = useState(true); // État de chargement
-  const [error, setError] = useState(null); // État d'erreur
+  const [articles, setArticles] = useState([]); // Stocke articles
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error State
 
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        // Appel de l'API backend
+        //Call API backend
         const response = await axios.get('http://localhost:5000/api/patchnotes');
-        setArticles(response.data); // Met à jour les articles avec les données récupérées
+        setArticles(response.data); 
       } catch (err) {
-        console.error('Erreur lors de la récupération des articles :', err);
+        console.error('Error during fecth articles :', err);
         setError('Erreur lors du chargement des articles.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchArticles(); // Appel de la fonction
+    fetchArticles(); 
   }, []);
 
   function isSafeUrl(url) {

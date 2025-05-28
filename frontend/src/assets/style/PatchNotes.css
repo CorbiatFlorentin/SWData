@@ -22,7 +22,7 @@
     justify-content: center;
     gap: 20px;
     margin-top: 20px;
-    list-style: none; /* Enlève les puces de liste */
+    list-style: none;  
   }
   
   .article-box {
@@ -58,7 +58,7 @@
   }
   
   ul {
-    list-style: none; /* Supprime les points de liste */
+    list-style: none; 
     padding: 0;
   }
   

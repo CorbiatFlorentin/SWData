@@ -1,13 +1,13 @@
 const router = require("express").Router();
 const db     = require("../config/db-config");
-const { authenticateToken, authorizeRole } = require("../middleware/auth");
+const { authenticateToken} = require("../middleware/auth");
 const { upsertTeam } = require("../utils/teams");
 
 router.get(
   "/",
   authenticateToken,
-  authorizeRole,
   (req, res) => {
+    console.log("▶️ [teamsRoutes] GET /api/teams — headers:", req.headers);
     const uid = req.user.id;
     const sql = `
       SELECT t.team_id, t.tower_id, t.team_idx,
@@ -36,8 +36,9 @@ router.get(
 router.post(
   "/",
   authenticateToken,
-  authorizeRole,
   async (req, res) => {
+     console.log("▶️  [POST /api/teams] headers:", req.headers);
+    console.log("▶️  [POST /api/teams] body:", req.body);
     try {
       const { tower_id, team_idx, monsters } = req.body;
       if (!Array.isArray(monsters) || monsters.length !== 3) {

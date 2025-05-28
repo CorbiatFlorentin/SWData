@@ -5,7 +5,7 @@ import '../assets/style/Arena.css';
 
 const ArenaPage = () => {
   const [items, setItems] = useState([]);
-  const navigate = useNavigate(); // Hook pour la navigation
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchData = () => {
@@ -46,7 +46,7 @@ const ArenaPage = () => {
           <div
             key={groupIndex}
             className="rectangle-container"
-            onClick={() => handleRowClick(groupIndex)} // Ajout d'un gestionnaire de clic
+            onClick={() => handleRowClick(groupIndex)} 
           >
             {items
               .slice(groupIndex * 4, groupIndex * 4 + 4)

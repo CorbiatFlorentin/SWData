@@ -11,21 +11,18 @@ const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
 
-  // Gérer l'affichage du menu
   const handleMouseEnter = () => {
-    if (timeoutId) clearTimeout(timeoutId); // Annule le timeout si l'User revient
+    if (timeoutId) clearTimeout(timeoutId); 
     setShowMenu(true);
   };
 
   const handleMouseLeave = () => {
-    // Délai de 3 secondes avant de cacher le menu
     const id = setTimeout(() => {
       setShowMenu(false);
     }, 3000);
     setTimeoutId(id);
   };
 
-  // Nettoyer le timeout si le composant est démonté
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, [timeoutId]);

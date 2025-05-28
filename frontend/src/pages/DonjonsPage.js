@@ -1,4 +1,3 @@
-// src/DonjonsPage.js
 import React from 'react';
 
 const DonjonsPage = () => {

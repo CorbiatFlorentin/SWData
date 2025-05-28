@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Création du composant bouton
+
 const Button = ({ onClick, direction, label }) => {
   return (
     <button className={`button ${direction}`} onClick={onClick} type="button">
@@ -8,7 +8,7 @@ const Button = ({ onClick, direction, label }) => {
         className={`fa-solid fa-arrow-${direction === 'prev' ? 'left' : 'right'}`}
         aria-hidden="true"
       ></i>
-      <span className="sr-only">{label}</span> {/* Texte accessible */}
+      <span className="sr-only">{label}</span> {/* Txt for help*/}
     </button>
   );
 };

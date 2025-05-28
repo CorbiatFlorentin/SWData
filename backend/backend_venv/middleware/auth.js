@@ -18,13 +18,4 @@ function authenticateToken(req, res, next) {
   }
 }
 
-function authorizeRole(role) {
-  return (req, res, next) => {
-    if (!req.user || req.user.role !== role) {
-      return res.sendStatus(403);
-    }
-    next();
-  };
-}
-
-module.exports = { authenticateToken, authorizeRole };
+module.exports = { authenticateToken};

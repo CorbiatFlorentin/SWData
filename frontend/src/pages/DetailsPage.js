@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import '../assets/style/DetailsPage.css';
 
 const DetailsPage = () => {
-  const { groupIndex } = useParams(); // Récupère l'index du groupe
+  const { groupIndex } = useParams(); 
 
   return (
     <div className="details-container">

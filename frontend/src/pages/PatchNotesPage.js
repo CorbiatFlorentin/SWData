@@ -5,15 +5,14 @@ import escape from 'validator/lib/escape';
 import '../assets/style/PatchNotes.css';
 
 const PatchNotesPage = () => {
-  const [articles, setArticles] = useState([]); // Stocke articles
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error State
+  const [articles, setArticles] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        //Call API backend
         const response = await axios.get('http://localhost:5000/api/patchnotes');
         setArticles(response.data); 
       } catch (err) {

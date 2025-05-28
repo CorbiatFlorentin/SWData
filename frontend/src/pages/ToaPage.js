@@ -1,4 +1,3 @@
-// src/ToaPage.js
 import React from 'react';
 
 

@@ -5,7 +5,6 @@ export default function MonsterSelect({ visible, onPick, onClose }) {
   const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
 
-  // fetch unique à l’ouverture de la page
   useEffect(() => {
     console.log("[MonsterSelect] fetch monsters once");
     fetch("http://localhost:5000/api/monsters")
@@ -20,7 +19,6 @@ export default function MonsterSelect({ visible, onPick, onClose }) {
       .catch(err => console.error("[MonsterSelect] fetch error:", err));
   }, []);
 
-  // si on n’est pas visible, on ne rend rien (mais on garde le state list!)
   if (!visible) return null;
 
   const filtered = list.filter(m =>

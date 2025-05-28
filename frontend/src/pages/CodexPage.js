@@ -1,4 +1,3 @@
-// src/CodexPage.js
 import React from 'react';
 
 const CodexPage = () => {

@@ -24,7 +24,7 @@
 }
 
 .item {
-  width: 200px; /* Taille des éléments non-actifs */
+  width: 200px; 
   height: 300px;
   border-radius: 20px;
   background-size: cover;
@@ -33,7 +33,7 @@
   top: 50%;
   transform: translateY(-50%);
   transition: all 0.5s ease;
-  opacity: 0.5; /* Transparence pour les non-actifs */
+  opacity: 0.5; 
   z-index: 1;
 }
 
@@ -101,12 +101,11 @@ button {
   }
 }
 
-/* Positionnement des boutons corrigé */
 .button-container {
   width: 100%;
   text-align: center;
   position: absolute;
-  bottom: 20px; /* Place les boutons en bas du conteneur, au-dessus du bord inférieur */
+  bottom: 20px; 
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -120,7 +119,7 @@ button {
   border: none;
   cursor: pointer;
   margin: 0 5px;
-  background-color: #3498db; /* Couleur des boutons */
+  background-color: #000000; 
   color: white;
   border: 1px solid #000;
   transition: 0.3s;
@@ -155,11 +154,10 @@ button {
 
 /* RESPONSIVE DESIGN */
 
-/* Petits écrans : Tablettes */
 @media (max-width: 768px) {
   .container {
-    width: 90%; /* Réduction de la taille de la container */
-    height: auto; /* Hauteur dynamique */
+    width: 90%; 
+    height: auto; 
   }
 
   .item {
@@ -186,10 +184,10 @@ button {
   }
 }
 
-/* Très petits écrans : Smartphones */
+
 @media (max-width: 480px) {
   .container {
-    width: 95%; /* Plus petite largeur pour mobile */
+    width: 95%; 
     height: auto;
   }
 
@@ -204,8 +202,8 @@ button {
   }
 
   .content {
-    left: 20px; /* Réduire le décalage gauche */
-    width: 250px; /* Réduire la taille du contenu */
+    left: 20px; 
+    width: 250px; 
   }
 
   .name {
@@ -269,24 +267,24 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Prend toute la hauteur de la page */
+  height: 100vh; 
   background-color: #f6f5f7;
 }
 
 .auth-container {
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* Espace entre les deux sections */
+  gap: 20px; 
   background-color: white;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  max-width: 900px; /* Limite la largeur globale */
-  width: 100%; /* Adapte la largeur aux petits écrans */
+  max-width: 900px; 
+  width: 100%; 
 }
 
 .auth-section {
-  flex: 1; /* Sections de largeur égale */
+  flex: 1; 
   padding: 20px;
   border-radius: 10px;
   background-color: #fff;

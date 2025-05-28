@@ -13,12 +13,12 @@
   justify-content: center;
 }
 
-/* ────────── Tours ────────── */
+/* ────────── Tower ────────── */
 .tower {
   position: absolute;
   width: 48px;
   height: 48px;
-  transform: translate(-50%, -100%);  /* la “pointe” de la tour touche le point XY */
+  transform: translate(-50%, -100%);  
   cursor: pointer;
 }
 
@@ -39,7 +39,6 @@
   z-index: 999;
 }
 
-/* ────────── Fenêtre modale ────────── */
 .modal {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
@@ -61,7 +60,6 @@
   cursor: pointer;
 }
 
-/* ────────── Cartes Monster ────────── */
 .cards {
   display: flex;
   gap: 12px;
@@ -87,7 +85,6 @@
   border-radius: 2px;
 }
 
-/* ───── Sélecteur d'équipes ───── */
 .team-selector {
   display: flex;
   gap: 8px;
@@ -110,7 +107,6 @@
   font-weight: 600;
 }
 
-/* bouton flottant en haut-droite */
 .team-list-toggle {
   position: fixed;
   top: 12px;
@@ -124,10 +120,9 @@
   cursor: pointer;
 }
 
-/* panneau latéral qui se déploie depuis la gauche du bouton */
 .team-list-panel {
   position: fixed;
-  top: 48px;           /* juste sous le bouton */
+  top: 48px;           
   right: 12px;
   width: 220px;
   max-height: 70vh;
@@ -163,5 +158,4 @@
 }
 
 
-/* (le reste de ton CSS précédent reste identique) */
 

@@ -110,17 +110,29 @@ export default function OccupationPage() {
 
   // Ajout d'une équipe
   const addTeam = () => {
-    if (!selectedTower) return;
-    setTowerTeams(prev => {
-      const copy = { ...prev };
-      const teams = [...copy[selectedTower.id]];
-      if (teams.length >= MAX_TEAMS) return prev;
-      teams.push([null, null, null]);
-      copy[selectedTower.id] = teams;
-      return copy;
-    });
-    setTeamIdx(idx => idx + 1);
-  };
+  if (!selectedTower) return;
+
+  // On calcule l'idx de la nouvelle team
+  const currentTeams = towerTeams[selectedTower.id] || [];
+  const newTeamIdx = currentTeams.length;
+
+  // 1) On met à jour le state pour ajouter l'équipe vide
+  setTowerTeams(prev => {
+    const copy = { ...prev };
+    const teams = [...copy[selectedTower.id]];
+    if (teams.length >= MAX_TEAMS) return prev;
+    teams.push([null, null, null]);
+    copy[selectedTower.id] = teams;
+    return copy;
+  });
+
+  // 2) On passe sur l'onglet de la nouvelle team
+  setTeamIdx(newTeamIdx);
+
+  // 3) On crée immédiatement 3 slots vides en base pour cette team
+  saveTeam(selectedTower.id, newTeamIdx, [null, null, null]);
+};
+
 
   if (isLoading) return <div className="loading">Chargement…</div>;
 

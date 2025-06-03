@@ -82,27 +82,42 @@ export default function OccupationPage() {
     return m ? Number(m[1]) : 0;
   };
 
-  // Sauvegarde en base seulement si équipe complète (3 monstres non-zero)
-  const saveTeam = (towerId, teamIdx, monsters) => {
-    if (!token) return;
-    const monsterIds = monsters.map(idOrZero);
-    // Vérification complète
-    if (!monsterIds.every(id => id > 0)) {
-      console.log("[OccupationPage] équipe incomplète, pas de save :", monsterIds);
-      return;
-    }
-    fetch(`${API}/teams`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ tower_id: towerId, team_idx: teamIdx, monsters: monsterIds })
+ const saveTeam = (towerId, teamIdx, monsters) => {
+  if (!token) return;
+  const monsterIds = monsters.map(idOrZero);
+
+  // Cas 1) *CREATION* de l'équipe vide : [0,0,0]
+  const isCreation = monsterIds.every(id => id === 0);
+  // Cas 2) *INCOMPLÈTE* : ni équipe vide, ni tous les IDs > 0
+  const isPartiallyFilled = !isCreation && !monsterIds.every(id => id > 0);
+
+  if (isPartiallyFilled) {
+    console.log("[OccupationPage] équipe incomplète, pas de save :", monsterIds);
+    return;
+  }
+
+  // Si on est ici, c'est soit isCreation (on crée l'équipe vide), soit tous les IDs > 0 (mise à jour complète)
+  console.log("[saveTeam] Envoi POST /api/teams →", { towerId, teamIdx, monsterIds });
+  fetch(`${API}/teams`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      tower_id: towerId,
+      team_idx: teamIdx,
+      monsters: monsterIds
     })
-      .then(res => {
-        if (!res.ok) throw new Error(`Save error ${res.status}`);
-        return res.json();
-      })
-      .then(() => console.log("Team saved"))
-      .catch(console.error);
-  };
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`Save error ${res.status}`);
+      return res.json();
+    })
+    .then(() => console.log("Team saved"))
+    .catch(console.error);
+};
+
 
   // Calcul du nombre de tours occupées
   const hasAnyMonster = teams => teams.some(team => team.some(Boolean));

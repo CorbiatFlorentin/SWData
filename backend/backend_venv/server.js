@@ -114,7 +114,7 @@ teamsRouter.post('/', (req, res, next) => {
 
 app.use('/api/teams', teamsRouter);
 
-// Endpoint occupation (agrégation)
+// Endpoint occupation (agreg)
 app.get('/occupation', (req, res, next) => {
   const db = req.app.locals.db;
   db.all(
@@ -146,7 +146,7 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: err.message });
 });
 
-// Démarrage du serveur
+// Servor start
 const PORT = process.env.PORT || 5000;
 console.log('⌛ Avant app.listen()');
 app.listen(PORT, () => console.log(`Server start on port ${PORT}`));

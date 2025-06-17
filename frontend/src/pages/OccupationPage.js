@@ -158,8 +158,20 @@ export default function OccupationPage() {
       </button>
       {showList && (
         <div className="team-list-panel">
-          {filledTowers.map(t => <div key={t.id}>{t.name}</div>)}
-        </div>
+    {filledTowers.map(t =>
+      <button
+        key={t.id}
+        className="team-list-item"
+        onClick={() => {
+          setSelectedTower(t);
+          setTeamIdx(0);
+          setShowList(false);
+        }}
+      >
+        {t.name}
+      </button>
+    )}
+  </div>
       )}
 
       {blueTowers.map(t => (

@@ -1,6 +1,6 @@
 # 📌 SWData
 
-🔹 Un outil de gestion et d'organisation des sièges pour les maîtres et vice-maîtres de guilde dans *Summoners War*.
+🔹 Un outil de gestion et d'organisation des sièges  dans *Summoners War*.
 
 ## 🚀 Objectif du projet
 Ce projet vise à faciliter la planification et l'organisation des sièges en fournissant une interface permettant de gérer efficacement les attaques, les défenses et la coordination entre les membres de la guilde.
@@ -53,7 +53,9 @@ npm start
 ## 🎯 Roadmap (améliorations à venir)
 - 🔜 Statistiques avancées sur les performances des joueurs  
 - 🔜 Système de recommandations pour optimiser les compositions  
-- 🔜 Gestion des permissions et rôles au sein de la guilde  
+- 🔜 Gestion des permissions et rôles au sein de la guilde
+- 🔜 Ajout de pages de descriptions de monstres
+- 🔜 Import de données relatives au compte du joueur en jeu  
 
 ## 🛠 Outils recommandés
 - **DBeaver** pour explorer et gérer la base de données SQLite3   

@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: -1;
 }
 
 /* ────────── Tower ────────── */
@@ -122,7 +123,7 @@
 
 .team-list-panel {
   position: fixed;
-  top: 48px;           
+  top: 60px;           
   right: 12px;
   width: 220px;
   max-height: 70vh;

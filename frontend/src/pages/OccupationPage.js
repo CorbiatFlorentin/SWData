@@ -6,6 +6,7 @@ import "../assets/style/OccupationPage.css";
 import blueTower from "../assets/Img/tower_icon.png";
 import MonsterSelect from "../components/MonsterSelect";
 
+
 // Coordonnées des tours
 const blueTowers = [
   { id: 1,  name: "Tour 1",  left: "16.5%", top: "65.5%" },

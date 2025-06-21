@@ -72,10 +72,10 @@
     background: #cc0000;
   }
   .register-button {
-    background: #007bff;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 3px;
+    background: #69a5e5;
+    color: rgb(44, 96, 48);
+    padding: 5px 8px;
+    border-radius: 50px;
     text-align: center;
     text-decoration: none;
     transition: background 0.3s;

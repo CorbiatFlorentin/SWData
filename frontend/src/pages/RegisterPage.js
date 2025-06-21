@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useUser } from '../UserContext'; 
+import isEmail from 'validator/lib/isEmail';
+import escape from 'validator/lib/escape';
 
 const Register = () => {
   const { setUser, login } = useUser(); 
+
   const [registerData, setRegisterData] = useState({
     nom: '',
     prenom: '',
@@ -16,41 +19,46 @@ const Register = () => {
     mot_de_passe: ''
   });
 
-  const [emailReset, setEmailReset] = useState('');
+  const validateRegisterForm = () => {
+    const { nom, prenom, pseudo, email, mot_de_passe } = registerData;
+    if (!nom || !prenom || !pseudo || !email || !mot_de_passe) return false;
+    if (!isEmail(email)) return false;
+    if (mot_de_passe.length < 8) return false;
+    return true;
+  };
 
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
-    setRegisterData({ ...registerData, [name]: value });
+    setRegisterData({ ...registerData, [name]: escape(value) });
   };
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
-    setLoginData({ ...loginData, [name]: value });
-  };
-
-  const handleResetChange = (e) => {
-    setEmailReset(e.target.value);
+    setLoginData({ ...loginData, [name]: escape(value) });
   };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    if (!validateRegisterForm()) {
+      return alert('Veuillez remplir tous les champs correctement.');
+    }
     try {
       const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(registerData)
+        body: JSON.stringify(registerData),
+        credentials: 'include'
       });
-       console.log('URL fetch login →', `http://localhost:5000/auth/login`);
+
       const data = await response.json();
       if (response.ok) {
-        alert('Inscription successfull');
-        setUser({ pseudo: registerData.pseudo }); 
-        localStorage.setItem('token', data.token);
+        alert('Inscription réussie');
+        setUser({ pseudo: registerData.pseudo });
       } else {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Error during inscription:', error);
+      console.error('Erreur inscription:', error);
     }
   };
 
@@ -60,9 +68,10 @@ const Register = () => {
       const response = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginData)
+        body: JSON.stringify(loginData),
+        credentials: 'include'
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         login({ pseudo: data.pseudo }, data.token);
@@ -70,55 +79,7 @@ const Register = () => {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Error during login:', error);
-    }
-  };
-
-  const handleResetSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailReset })
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert('An email has been sent');
-      } else {
-        alert(data.error);
-      }
-    } catch (error) {
-      console.error('Error during delete', error);
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (window.confirm('Etes-vous sûr de vouloir supprimer votre compte ?')) {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) return alert('Vous devez être connecté.');
-
-        const response = await fetch('http://localhost:5000/users/delete-account', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          alert('Compte supprimé avec succès');
-          setUser(null);
-          localStorage.removeItem('token');
-        } else {
-          alert(data.error);
-        }
-      } catch (error) {
-        console.error('Error during account suppression:', error);
-      }
+      console.error('Erreur connexion:', error);
     }
   };
 
@@ -143,12 +104,6 @@ const Register = () => {
             <input type="email" name="email" placeholder="Email" onChange={handleLoginChange} required />
             <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleLoginChange} required />
             <button type="submit">Se connecter</button>
-          </form>
-          <button onClick={handleDeleteAccount} className="delete-account-btn">Supprimer mon compte</button>
-          <h3>Mot de passe oublié ?</h3>
-          <form onSubmit={handleResetSubmit} className="reset-form">
-            <input type="email" placeholder="Email" onChange={handleResetChange} required />
-            <button type="submit">Réinitialiser</button>
           </form>
         </div>
       </div>

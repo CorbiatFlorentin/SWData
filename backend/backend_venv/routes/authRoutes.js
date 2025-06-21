@@ -101,7 +101,7 @@ router.post('/login', (req, res) => {
         email: user.email,
         role: user.role
       });
-      res.status(200).json({ message: 'Connection success', token });
+      res.status(200).json({ message: 'Connection success', token, pseudo: user.pseudo });
     }
   );
 });

@@ -13,6 +13,7 @@ const adminRoutes      = require('./routes/adminRoutes');
 const patchnotesRoutes = require('./routes/patchnotesRoutes');
 const monsterRoutes    = require('./routes/monsterRoutes');
 const db               = require('./config/db-config');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -26,8 +27,12 @@ const loginLimiter = rateLimit({
 });
 
 app.locals.db = db;
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(bodyParser.json());
+app.use(helmet());
 
 // Debug : log de chaque requête
 app.use((req, _res, next) => {

@@ -17,7 +17,27 @@ const helmet = require('helmet');
 
 const app = express();
 
-// Limiteur sur /auth/login
+
+const staticMonstersPath = path.join(__dirname, 'database', 'monsters_icons');
+app.use(
+  '/static/monsters',
+  cors({ origin: 'http://localhost:3000' }),
+  express.static(staticMonstersPath)
+);
+
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
+};
+app.use(cors(corsOptions));
+
+
+// Static files pour les icônes de monstres
+
+
 const loginLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 5,
@@ -25,6 +45,8 @@ const loginLimiter = rateLimit({
     res.status(429).json({ error: 'Too many try to log, try later' });
   }
 });
+
+app.use('/api', patchnotesRoutes);
 
 app.locals.db = db;
 app.use(cors({
@@ -40,11 +62,7 @@ app.use((req, _res, next) => {
   next();
 });
 
-// Static files pour les icônes de monstres
-app.use(
-  '/static/monsters',
-  express.static(path.join(__dirname, 'database', 'monsters_icons'))
-);
+
 
 // Rate limit login
 app.use('/auth/login', loginLimiter);
@@ -58,7 +76,7 @@ console.log('🔌 Mounting adminRoutes on /admin');
 app.use('/admin', adminRoutes);
 
 // Routes API métier
-app.use('/api', patchnotesRoutes);
+
 app.use('/api/monsters', monsterRoutes);
 
 // Routes équipes avec création automatique si nécessaire

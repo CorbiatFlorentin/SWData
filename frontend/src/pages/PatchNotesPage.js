@@ -7,13 +7,15 @@ import '../assets/style/PatchNotes.css';
 const PatchNotesPage = () => {
   const [articles, setArticles] = useState([]); 
   const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
+  const API = process.env.REACT_APP_API_BASE;
+ 
 
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/patchnotes');
+        const response = await axios.get(`${API}/patchnotes`); 
         setArticles(response.data); 
       } catch (err) {
         console.error('Error during fecth articles :', err);
@@ -24,7 +26,9 @@ const PatchNotesPage = () => {
     };
 
     fetchArticles(); 
-  }, []);
+  }, [API]);
+  console.log("API endpoint:", API);
+  
 
   function isSafeUrl(url) {
     

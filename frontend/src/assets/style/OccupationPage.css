@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: -1;
+  z-index: 0;
 }
 
 /* ────────── Tower ────────── */
@@ -21,6 +21,7 @@
   height: 48px;
   transform: translate(-50%, -100%);  
   cursor: pointer;
+  z-index: 100;
 }
 
 .tower img {
@@ -110,9 +111,9 @@
 
 .team-list-toggle {
   position: fixed;
-  top: 12px;
+  top: 50px;
   right: 12px;
-  z-index: 9000;
+  z-index: 9999;
   background: #222;
   color: #fff;
   border: none;

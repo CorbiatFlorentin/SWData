@@ -17,7 +17,7 @@ const db               = require('./config/db-config');
 
 const app = express();
 
-// 📁 CORS global pour l'ensemble des routes
+// 📁 CORS global 
 const corsOptions = {
   origin: 'http://localhost:3000',
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
@@ -32,7 +32,7 @@ app.use(helmet());
 // 🔧 Parsers
 app.use(bodyParser.json());
 
-// 📁 Static files (images de monstres)
+
 const staticMonstersPath = path.join(__dirname, 'database', 'monsters_icons');
 app.use('/static/monsters', express.static(staticMonstersPath));
 
@@ -69,7 +69,7 @@ app.use('/admin', adminRoutes);
 console.log('🔌 Mounting teams endpoints on /api/teams');
 const teamsRouter = express.Router();
 
-// 👉 Helper pour enregistrer slots
+// 👉 Helper 
 function upsertSlots(db, team_id, monsters, res, next) {
   db.run(`DELETE FROM team_slots WHERE team_id = ?`, [team_id], err => {
     if (err) return next(err);
@@ -93,7 +93,7 @@ teamsRouter.post('/', (req, res, next) => {
   const { tower_id, team_idx, monsters } = req.body;
   const db = req.app.locals.db;
 
-  // 🧪 Validation stricte
+  // 🧪 Validation 
   if (
     typeof tower_id !== 'number' || tower_id <= 0 ||
     typeof team_idx !== 'number' || team_idx < 0 ||
@@ -106,7 +106,7 @@ teamsRouter.post('/', (req, res, next) => {
     });
   }
 
-  // 1. Vérifier si team existe
+
   db.get(`SELECT team_id FROM teams WHERE tower_id = ? AND team_idx = ?`, [tower_id, team_idx], (err, row) => {
     if (err) return next(err);
 
@@ -114,7 +114,6 @@ teamsRouter.post('/', (req, res, next) => {
       return upsertSlots(db, row.team_id, monsters, res, next);
     }
 
-    // 2. Sinon, création + insertion slots
     db.run(`INSERT INTO teams (tower_id, team_idx) VALUES (?, ?)`, [tower_id, team_idx], function (err) {
       if (err) return next(err);
       upsertSlots(db, this.lastID, monsters, res, next);

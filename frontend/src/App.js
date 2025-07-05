@@ -13,16 +13,17 @@ import Navbar from './components/Navbar';
 
 
 
+
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [items] = useState([
-    { id: 1, name: 'Arena', description: 'Lorem ipsum dolor...', image: arenaImage, page: '/arena' },
-    { id: 2, name: 'Occupation', description: 'Lorem ipsum dolor...', image: occupationImage, page: '/occupation' },
-    { id: 3, name: 'Donjons', description: 'Lorem ipsum dolor...', image: donjonsImage, page: '/donjons' },
-    { id: 4, name: 'Toa', description: 'Lorem ipsum dolor...', image: toaImage, page: '/toa' },
-    { id: 5, name: 'Codex', description: 'Lorem ipsum dolor...', image: codexImage, page: '/codex' },
-    { id: 6, name: 'PatchNotes', description: 'Lorem ipsum dolor...', image: patchNotesImage, page: './PatchNotes' }
+    { id: 1, name: 'Arena', image: arenaImage, page: '/arena' },
+    { id: 2, name: 'Occupation', image: occupationImage, page: '/occupation' },
+    { id: 3, name: 'Donjons', image: donjonsImage, page: '/donjons' },
+    { id: 4, name: 'Toa', image: toaImage, page: '/toa' },
+    { id: 5, name: 'Codex', image: codexImage, page: '/codex' },
+    { id: 6, name: 'PatchNotes', image: patchNotesImage, page: './PatchNotes' }
   ]);
 
   const nextSlide = () => {

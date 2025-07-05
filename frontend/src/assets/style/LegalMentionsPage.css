@@ -1,0 +1,52 @@
+.legal-mentions {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 100px 20px 60px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.legal-card {
+  background-color: #fff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  color: #222;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.6;
+  animation: fadeIn 0.5s ease-out;
+  transition: transform 0.3s ease;
+}
+
+.legal-card:hover {
+  transform: translateY(-2px);
+}
+
+.legal-card h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 30px;
+  color: #222;
+}
+
+.legal-card h2 {
+  margin-top: 25px;
+  font-size: 1.3rem;
+  color: #000;
+  border-left: 4px solid #ff9800;
+  padding-left: 12px;
+}
+
+.legal-card p {
+  margin: 8px 0;
+  font-size: 1rem;
+  text-align: justify;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

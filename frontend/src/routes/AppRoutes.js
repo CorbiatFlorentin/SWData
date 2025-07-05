@@ -10,6 +10,7 @@ import Toa from '../pages/ToaPage';
 import PatchNotes from '../pages/PatchNotesPage';
 import DetailsPage from '../pages/DetailsPage';
 import AdminPage from "../pages/AdminPage";
+import LegalMentionsPage from '../pages/LegalMentionsPage';
 
 
 function AppRoutes() {
@@ -25,6 +26,7 @@ function AppRoutes() {
       <Route path='/Toa' element={<Toa/>} />
       <Route path='/PatchNotes' element={<PatchNotes/>} />
       <Route path="/details/:groupIndex" element={<DetailsPage />} />
+      <Route path='/legal-mentions' element={<LegalMentionsPage />} />
 
     </Routes>
   );

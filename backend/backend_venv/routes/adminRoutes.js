@@ -4,7 +4,7 @@ const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Test de la route racine /admin
+
 router.get(
   '/',
   authenticateToken,
@@ -14,7 +14,7 @@ router.get(
   }
 );
 
-// Récupérer tous les users (nécessite juste d'être authentifié)
+
 router.get(
   '/users',
   authenticateToken,
@@ -33,7 +33,7 @@ router.get(
   }
 );
 
-// Supprimer un user (nécessite juste d'être authentifié)
+
 router.delete(
   '/users/:id',
   authenticateToken,
@@ -52,7 +52,7 @@ router.delete(
   }
 );
 
-// Mettre à jour le rôle d’un user (nécessite juste d'être authentifié)
+
 router.put(
   '/users/:id/role',
   authenticateToken,
@@ -80,5 +80,26 @@ router.put(
     );
   }
 );
+
+router.delete(
+  '/users/inactive',
+  authenticateToken,
+  (req, res) => {
+    console.log("▶️ [adminRoutes] DELETE /admin/users/inactive — headers:", req.headers);
+    const threeYearsAgo = new Date();
+    threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+    const formattedDate = threeYearsAgo.toISOString(); // format compatible SQLite
+
+    const query = `DELETE FROM users WHERE last_activity < ?`;
+
+    db.run(query, [formattedDate], function (err) {
+      if (err) {
+        return res.status(500).json({ error: 'Error while deleting inactive users.' });
+      }
+      res.json({ message: `✅ ${this.changes} utilisateur(s) inactif(s) supprimé(s).` });
+    });
+  }
+);
+
 
 module.exports = router;

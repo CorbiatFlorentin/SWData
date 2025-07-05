@@ -1,10 +1,12 @@
 import React from 'react';
 import '../assets/style/App.css'; 
 
+
 function Sidebar() {
   const links = [
     { name: 'Twitch', url: 'https://www.twitch.tv/'},
-    { name: 'Coupons SW', url: 'https://swq.jp/l/fr-FR/'} 
+    { name: 'Coupons SW', url: 'https://swq.jp/l/fr-FR/'}, 
+    { name: 'Mentions légales', url: '/legal-mentions' }
   ];
 
   return (

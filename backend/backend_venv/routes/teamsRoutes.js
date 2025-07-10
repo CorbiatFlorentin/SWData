@@ -26,8 +26,26 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// 🔐 Sécurité
-app.use(helmet());
+// 🔐 Security 
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "http://localhost:3000"],
+      styleSrc: ["'self'", "'unsafe-inline'", "http://localhost:3000"],
+      imgSrc: ["'self'", "data:", "blob:", "http://localhost:3000"],
+      fontSrc: ["'self'", "http://localhost:3000"],
+      connectSrc: ["'self'", "http://localhost:3000"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"]
+    }
+  },
+  crossOriginEmbedderPolicy: false
+}));
+
+
 
 // 🔧 Parsers
 app.use(bodyParser.json());
@@ -48,7 +66,7 @@ const loginLimiter = rateLimit({
 // 🧠 DB
 app.locals.db = db;
 
-// 🪵 Log chaque requête
+// 🪵 Log each request
 app.use((req, _res, next) => {
   console.log(`--> ${req.method} ${req.originalUrl}`);
   next();

@@ -1,6 +1,5 @@
 import React from 'react';
-import '../assets/style/LegalMentionsPage.css'; // Assure-toi que ce fichier existe
-
+import '../assets/style/LegalMentionsPage.css'; 
 function LegalMentionsPage() {
   return (
     <main className="legal-mentions">

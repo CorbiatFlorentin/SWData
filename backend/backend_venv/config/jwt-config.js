@@ -1,4 +1,3 @@
-// config/jwt-config.js
 const jwt = require('jsonwebtoken');
 
 // Ideally load from .env — fallback to default for development

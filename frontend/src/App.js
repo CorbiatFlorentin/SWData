@@ -57,9 +57,9 @@ function App() {
                 <div className="des">{item.description}</div>
                 <button
                   className="see-more"
-                  onClick={() => navigate(item.page)}  // Naviguer vers la page spécifique
+                  onClick={() => navigate(item.page)}  
                 >
-                  See More
+                  En savoir plus
                 </button>
               </div>
             </div>

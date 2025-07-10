@@ -30,9 +30,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="nav-links">
-        <Link to="/">Home</Link>
+        <Link to="/">Accueil</Link>
         <Link to="/occupation">Occupation</Link>
-        <Link to="patchnotes">Patchnotes</Link>
+        <Link to="patchnotes">Notes de patch</Link>
       </div>
 
       <div 

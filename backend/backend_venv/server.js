@@ -1,4 +1,4 @@
-console.log('▶️  Lancement de server.js');
+console.log('▶️  Start server.js');
 
 const express       = require('express');
 const rateLimit     = require('express-rate-limit');
@@ -35,7 +35,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-// Static files pour les icônes de monstres
+// Static files icon's monsters 
 
 
 const loginLimiter = rateLimit({
@@ -54,9 +54,26 @@ app.use(cors({
   credentials: true
 }));
 app.use(bodyParser.json());
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "http://localhost:3000"],
+      styleSrc: ["'self'", "'unsafe-inline'", "http://localhost:3000"],
+      imgSrc: ["'self'", "data:", "blob:", "http://localhost:3000"],
+      fontSrc: ["'self'", "http://localhost:3000"],
+      connectSrc: ["'self'", "http://localhost:3000"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"]
+    }
+  },
+  crossOriginEmbedderPolicy: false
+}));
 
-// Debug : log de chaque requête
+
+// Debug 
 app.use((req, _res, next) => {
   console.log(`--> ${req.method} ${req.originalUrl}`);
   next();
@@ -67,23 +84,18 @@ app.use((req, _res, next) => {
 // Rate limit login
 app.use('/auth/login', loginLimiter);
 
-// Routes publiques / non-API
+//  non-API
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 
-// Montage des routes admin AVANT tout préfixe /api
 console.log('🔌 Mounting adminRoutes on /admin');
 app.use('/admin', adminRoutes);
 
-// Routes API métier
-
 app.use('/api/monsters', monsterRoutes);
 
-// Routes équipes avec création automatique si nécessaire
 console.log('🔌 Mounting teams endpoints on /api/teams');
 const teamsRouter = express.Router();
 
-// Helper pour supprimer et recréer 3 slots
 function upsertSlots(db, team_id, monsters, res, next) {
   db.run(
     `DELETE FROM team_slots WHERE team_id = ?`,
@@ -110,7 +122,6 @@ teamsRouter.post('/', (req, res, next) => {
   const { tower_id, team_idx, monsters } = req.body;
   const db = req.app.locals.db;
 
-  // 1) Vérifier si la team existe
   db.get(
     `SELECT team_id FROM teams WHERE tower_id = ? AND team_idx = ?`,
     [tower_id, team_idx],
@@ -118,11 +129,9 @@ teamsRouter.post('/', (req, res, next) => {
       if (err) return next(err);
 
       if (row) {
-        // team existante -> on upsert ses slots
         return upsertSlots(db, row.team_id, monsters, res, next);
       }
 
-      // 2) Sinon, on la crée puis on upsert ses slots
       db.run(
         `INSERT INTO teams (tower_id, team_idx) VALUES (?, ?)`,
         [tower_id, team_idx],
@@ -173,4 +182,4 @@ app.use((err, _req, res, _next) => {
 const PORT = process.env.PORT || 5000;
 console.log('⌛ Avant app.listen()');
 app.listen(PORT, () => console.log(`Server start on port ${PORT}`));
-console.log('👋 Fin du fichier server.js (mais le serveur tourne toujours)');
+console.log('server running');

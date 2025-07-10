@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Port exposed
-EXPOSE 3000
+EXPOSE 5000
 
 # Start command 
 CMD ["node", "server.js"]

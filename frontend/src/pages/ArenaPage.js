@@ -26,7 +26,7 @@ const ArenaPage = () => {
     fetchData();
   }, []);
 
-  // Fonction pour gérer le clic sur une ligne
+  //Click on a line
   const handleRowClick = (groupIndex) => {
     navigate(`/details/${groupIndex}`);
   };
